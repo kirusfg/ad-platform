@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "django_vite",
     # Local apps
     "apps.users.apps.UsersConfig",
     "apps.projects.apps.ProjectsConfig",
@@ -134,11 +135,28 @@ LOCALE_PATHS = [
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    BASE_DIR / "static" / "dist",
+]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Vite App Dir: static/dist by default
+DJANGO_VITE_ASSETS_PATH = BASE_DIR / "static" / "dist"
+
+# If True, manifest.json will be used
+DJANGO_VITE_MANIFEST_PATH = BASE_DIR / "static" / "dist" / "manifest.json"
+
+# Django Vite Configuration
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": True,
+    }
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

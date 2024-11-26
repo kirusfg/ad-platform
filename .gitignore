@@ -21,3 +21,6 @@ ENV/
 # Media and Static
 media/
 static/
+
+# Node
+node_modules/
