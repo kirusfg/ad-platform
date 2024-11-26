@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-26 23:21+0500\n"
+"POT-Creation-Date: 2024-11-26 23:28+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,6 +20,22 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
+#: apps/channels/apps.py:8
+msgid "Channels"
+msgstr "Позиции"
+
+#: apps/clients/apps.py:8
+msgid "Clients"
+msgstr "Контрагенты"
+
+#: apps/events/apps.py:8
+msgid "Events"
+msgstr "Мероприятия"
+
+#: apps/projects/apps.py:8
+msgid "Projects"
+msgstr "Проекты"
+
 #: apps/users/admin.py:14
 msgid "Personal info"
 msgstr "Персональные данные"
@@ -27,6 +43,10 @@ msgstr "Персональные данные"
 #: apps/users/admin.py:16
 msgid "Permissions"
 msgstr "Права доступа"
+
+#: apps/users/apps.py:8
+msgid "Users"
+msgstr "Пользователи"
 
 #: apps/users/models.py:8
 msgid "Administrator"
