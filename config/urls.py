@@ -17,10 +17,11 @@ Including another URLconf
 
 from django.urls import path
 from django.contrib import admin
-from apps.users.views import test_page
+from apps.users.views import test_page, increment
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("test/", test_page, name="test"),
+    path("increment/", increment, name="increment"),
 ]

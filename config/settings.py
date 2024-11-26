@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_vite",
+    "template_partials",
     # Local apps
     "apps.users.apps.UsersConfig",
     "apps.projects.apps.ProjectsConfig",

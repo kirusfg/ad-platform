@@ -10,9 +10,11 @@
     {% vite_asset 'main.js' %}
 </head>
 
-<body>
-    {% block content %}
-    {% endblock %}
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <div class="mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
 
 </html>
