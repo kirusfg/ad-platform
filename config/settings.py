@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from django.utils.translation import gettext_lazy as _
+
 
 load_dotenv()
 
@@ -38,6 +40,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    # Local apps
+    "apps.users.apps.UsersConfig",
+    "apps.projects.apps.ProjectsConfig",
+    "apps.channels.apps.ChannelsConfig",
+    "apps.clients.apps.ClientsConfig",
+    "apps.events.apps.EventsConfig",
 ]
 
 MIDDLEWARE = [
@@ -81,19 +89,10 @@ DATABASES = {
     }
 }
 
-# Static files
-STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "static"
-
-# Media files
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-# Default primary key field type
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = "users.User"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -114,19 +113,32 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Almaty"
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
+LANGUAGES = (
+    ("ru", _("Russian")),
+    ("en", _("English")),
+)
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "static"
+
+# Media files
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
