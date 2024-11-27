@@ -1,0 +1,31 @@
+{% load i18n %}
+{% load django_vite %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ad Platform{% endblock %}</title>
+    {% vite_hmr_client %}
+    {% vite_asset 'main.js' %}
+</head>
+
+<body class="min-h-screen bg-[#F5F1EA]" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <div class="flex">
+        {% include "core/partials/sidebar.html" %}
+
+        <div class="flex-1">
+            {% include "core/partials/navbar.html" %}
+
+            <main class="p-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

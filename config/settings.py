@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django_vite",
     "template_partials",
     # Local apps
+    "apps.core.apps.CoreConfig",
     "apps.users.apps.UsersConfig",
     "apps.projects.apps.ProjectsConfig",
     "apps.channels.apps.ChannelsConfig",
@@ -73,6 +74,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.core.context_processors.navigation",
             ],
         },
     },
