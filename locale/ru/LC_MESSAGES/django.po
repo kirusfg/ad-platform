@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-26 23:28+0500\n"
+"POT-Creation-Date: 2024-11-27 16:44+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,21 +20,157 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: apps/channels/apps.py:8
+#: apps/channels/apps.py:8 apps/channels/models.py:43
 msgid "Channels"
 msgstr "Позиции"
 
-#: apps/clients/apps.py:8
+#: apps/channels/models.py:6 apps/channels/models.py:27
+#: apps/channels/templates/channels/list.html:31
+#: apps/channels/templates/channels/list.html:90
+msgid "Name"
+msgstr "Название"
+
+#: apps/channels/models.py:7
+msgid "Description"
+msgstr "Описание"
+
+#: apps/channels/models.py:8 apps/channels/models.py:38
+msgid "Created At"
+msgstr "Создано"
+
+#: apps/channels/models.py:9 apps/channels/models.py:39
+msgid "Updated At"
+msgstr "Обновлено"
+
+#: apps/channels/models.py:12
+msgid "Channel Type"
+msgstr "Тип позиции"
+
+#: apps/channels/models.py:13
+msgid "Channel Types"
+msgstr "Типы позиций"
+
+#: apps/channels/models.py:22
+msgid "Free"
+msgstr "Свободна"
+
+#: apps/channels/models.py:23
+msgid "Reserved"
+msgstr "Забронирована"
+
+#: apps/channels/models.py:24
+msgid "In Use"
+msgstr "В использовании"
+
+#: apps/channels/models.py:25
+msgid "Blocked"
+msgstr "Заблокирована"
+
+#: apps/channels/models.py:31 apps/channels/templates/channels/list.html:32
+#: apps/channels/templates/channels/list.html:97
+msgid "Type"
+msgstr "Тип"
+
+#: apps/channels/models.py:34 apps/channels/templates/channels/list.html:33
+msgid "Status"
+msgstr "Статус"
+
+#: apps/channels/models.py:35 apps/channels/templates/channels/list.html:34
+#: apps/channels/templates/channels/list.html:108
+msgid "Location"
+msgstr "Местоположение"
+
+#: apps/channels/models.py:36 apps/channels/templates/channels/list.html:115
+msgid "Technical Specifications"
+msgstr "Тех. спецификации"
+
+#: apps/channels/models.py:37 apps/channels/templates/channels/list.html:122
+#, fuzzy
+#| msgid "Clients"
+msgid "Comments"
+msgstr "Контрагенты"
+
+#: apps/channels/models.py:42
+#, fuzzy
+#| msgid "Channels"
+msgid "Channel"
+msgstr "Позиции"
+
+#: apps/channels/templates/channels/list.html:4
+#: apps/channels/templates/channels/list.html:18
+#: apps/core/context_processors.py:20
+msgid "Advertising Channels"
+msgstr "Позиции"
+
+#: apps/channels/templates/channels/list.html:22
+#: apps/channels/templates/channels/list.html:128
+msgid "Create"
+msgstr "Создать"
+
+#: apps/channels/templates/channels/list.html:35
+msgid "Actions"
+msgstr "Действия"
+
+#: apps/channels/templates/channels/list.html:59
+msgid "No channels found"
+msgstr "Нет позиций"
+
+#: apps/channels/templates/channels/list.html:85
+msgid "Create New Channel"
+msgstr "Создать новую позицию"
+
+#: apps/channels/templates/channels/list.html:130
+msgid "Cancel"
+msgstr "Отмена"
+
+#: apps/channels/views.py:33
+msgid "Channel created successfully"
+msgstr "Позиция успешно создана"
+
+#: apps/channels/views.py:35
+#, python-format
+msgid "Error creating channel: %(error)s"
+msgstr "Ошибка создания позиции: %(error)s"
+
+#: apps/clients/apps.py:8 apps/core/context_processors.py:26
 msgid "Clients"
 msgstr "Контрагенты"
 
-#: apps/events/apps.py:8
+#: apps/core/apps.py:8
+msgid "Core"
+msgstr "Главная"
+
+#: apps/core/context_processors.py:8 apps/core/templates/core/home.html:6
+msgid "Home"
+msgstr "Главная"
+
+#: apps/core/context_processors.py:14 apps/projects/apps.py:8
+msgid "Projects"
+msgstr "Проекты"
+
+#: apps/core/context_processors.py:32 apps/events/apps.py:8
 msgid "Events"
 msgstr "Мероприятия"
 
-#: apps/projects/apps.py:8
-msgid "Projects"
-msgstr "Проекты"
+#: apps/core/templates/core/home.html:8
+msgid "Welcome to the homepage of the ad platform!"
+msgstr ""
+
+#: apps/core/templates/core/partials/navbar.html:10
+msgid "Search"
+msgstr "Поиск"
+
+#: apps/core/templates/core/partials/navbar.html:43
+msgid "Profile"
+msgstr "Профиль"
+
+#: apps/core/templates/core/partials/navbar.html:44
+msgid "Settings"
+msgstr "Настройки"
+
+#: apps/core/templates/core/partials/navbar.html:45
+msgid "Logout"
+msgstr "Выйти"
 
 #: apps/users/admin.py:14
 msgid "Personal info"
@@ -56,10 +192,18 @@ msgstr "Администратор"
 msgid "Manager"
 msgstr "Менеджер"
 
-#: config/settings.py:125
+#: config/settings.py:129
 msgid "Russian"
 msgstr "Русский"
 
-#: config/settings.py:126
+#: config/settings.py:130
 msgid "English"
 msgstr "Английский"
+
+#, fuzzy
+#~| msgid "Channels"
+#~ msgid "Create Channel"
+#~ msgstr "Создать позицию"
+
+#~ msgid "Analytics"
+#~ msgstr "Аналитика"

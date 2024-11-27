@@ -1,0 +1,137 @@
+{% extends 'core/layouts/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Advertising Channels" %}{% endblock %}
+
+{% block content %}
+<div class="mx-auto bg-base-100 rounded-2xl p-6">
+    {% if messages %}
+    {% for message in messages %}
+    <div
+        class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-error{% endif %} mb-4">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">{% trans "Advertising Channels" %}</h1>
+        <!-- Create button that opens modal -->
+        <button class="btn btn-primary" onclick="create_channel_modal.showModal()">
+            <i class="fa-solid fa-plus mr-2"></i>
+            {% trans "Create" %}
+        </button>
+    </div>
+
+    <!-- Channel list -->
+    <div class="overflow-x-auto">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Type" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Location" %}</th>
+                    <th>{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for channel in channels %}
+                <tr>
+                    <td>{{ channel.name }}</td>
+                    <td>{{ channel.type }}</td>
+                    <td>
+                        <span
+                            class="badge {% if channel.status == 'FREE' %}badge-success{% elif channel.status == 'RESERVED' %}badge-warning{% elif channel.status == 'IN_USE' %}badge-info{% else %}badge-error{% endif %}">
+                            {{ channel.get_status_display }}
+                        </span>
+                    </td>
+                    <td>{{ channel.location }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-ghost">
+                            <i class="fa-solid fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4">
+                        {% trans "No channels found" %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="join mt-4">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="join-item btn">«</a>
+        {% endif %}
+
+        <button class="join-item btn">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</button>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="join-item btn">»</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Create Channel Modal -->
+    <dialog id="create_channel_modal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg mb-4">{% trans "Create New Channel" %}</h3>
+            <form method="POST" class="space-y-4">
+                {% csrf_token %}
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">{% trans "Name" %}</span>
+                    </label>
+                    <input type="text" name="name" class="input input-bordered" required>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">{% trans "Type" %}</span>
+                    </label>
+                    <select name="type" class="select select-bordered" required>
+                        {% for channel_type in channel_types %}
+                        <option value="{{ channel_type.id }}">{{ channel_type.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">{% trans "Location" %}</span>
+                    </label>
+                    <input type="text" name="location" class="input input-bordered">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">{% trans "Technical Specifications" %}</span>
+                    </label>
+                    <textarea name="technical_specs" class="textarea textarea-bordered" rows="3"></textarea>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">{% trans "Comments" %}</span>
+                    </label>
+                    <textarea name="comments" class="textarea textarea-bordered" rows="3"></textarea>
+                </div>
+
+                <div class="modal-action">
+                    <button type="submit" class="btn btn-primary">{% trans "Create" %}</button>
+                    <button type="button" class="btn" onclick="create_channel_modal.close()">
+                        {% trans "Cancel" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+</div>
+{% endblock %}

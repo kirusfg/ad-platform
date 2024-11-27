@@ -2,7 +2,7 @@
 {% load django_vite %}
 
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" data-theme="light">
+<html lang="{{ LANGUAGE_CODE }}" data-theme="cupcake">
 
 <head>
     <meta charset="UTF-8">
@@ -12,18 +12,22 @@
     {% vite_asset 'main.js' %}
 </head>
 
-<body class="min-h-screen bg-[#F5F1EA]" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-    <div class="flex">
-        {% include "core/partials/sidebar.html" %}
+<body class="m-0 p-0" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <div class="min-h-screen bg-base-200 pt-12">
+        <!-- Navbar at the top -->
+        {% include "core/partials/navbar.html" %}
 
-        <div class="flex-1">
-            {% include "core/partials/navbar.html" %}
+        <!-- Main content with sidebar -->
+        <div class="max-w-screen-2xl mx-auto"> <!-- Fixed width container -->
+            <div class="flex gap-12 mt-12"> <!-- Add gap between sidebar and content -->
+                <!-- Sidebar -->
+                {% include "core/partials/sidebar.html" %}
 
-            <main class="p-6">
-                <div class="bg-white rounded-lg shadow-lg p-6">
+                <!-- Main content -->
+                <main class="flex-1">
                     {% block content %}{% endblock %}
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
     </div>
 </body>

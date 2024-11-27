@@ -1,43 +1,49 @@
 {% load i18n %}
 
-<nav class="bg-white shadow-md p-4">
-    <div class="container mx-auto flex items-center justify-between">
-        <!-- Search bar -->
-        <div class="flex-1 max-w-2xl mx-4">
-            <div class="relative">
-                <input type="text" placeholder="Поиск..."
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#2C1810]">
-                <button class="absolute right-3 top-2.5">
-                    <!-- Search icon -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </button>
+<div class="navbar navbar-center max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 rounded-box bg-base-100 mb-6">
+    <div class="flex-1">
+        <p class="text-2xl font-extrabold text-red-500">AdSphere</p>
+    </div>
+
+    <div class="flex-none gap-2">
+        <label class="input input-bordered flex items-center gap-2">
+            <input type="text" class="grow" placeholder="{% trans 'Search' %}" />
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </label>
+        <label class="swap swap-rotate btn btn-ghost btn-circle">
+            <input type="checkbox" class="theme-controller" value="coffee" data-toggle-theme="cupcake,forest" />
+            <i class="fa-solid fa-sun fa-lg swap-on"></i>
+            <i class="fa-solid fa-moon fa-lg swap-off"></i>
+        </label>
+
+        <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+                <div class="indicator">
+                    <i class="fa-solid fa-bell fa-lg"></i>
+                    <span class="badge badge-sm indicator-item my-4">8</span>
+                </div>
+            </div>
+            <div tabindex="0" class="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-52 shadow">
+                <!-- some fake notifications -->
+                <ul class="text-sm">
+                    <li class="p-4">Notification 1</li>
+                    <li class="p-4">Notification 2</li>
+                    <li class="p-4">Notification 3</li>
+                </ul>
             </div>
         </div>
-
-        <!-- User info and notifications -->
-        <div class="flex items-center space-x-4">
-            <!-- Notifications -->
-            <button class="relative">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-                <span
-                    class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
-            </button>
-
-            <!-- User menu -->
-            <div class="relative" x-data="{ open: false }">
-                <button class="flex items-center space-x-2" @click="open = !open">
-                    <div class="w-8 h-8 bg-[#2C1810] rounded-full"></div>
-                    <span class="text-gray-700">{{ user.username }}</span>
-                </button>
+        <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                <div class="w-10 rounded-full">
+                    <img alt="Tailwind CSS Navbar component"
+                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                </div>
             </div>
+            <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box mt-3 w-52 p-2 shadow">
+                <li><a>{% trans 'Profile' %}</a></li>
+                <li><a>{% trans 'Settings' %}</a></li>
+                <li><a class="text-error hover:bg-error hover:text-error-content">{% trans 'Logout' %}</a></li>
+            </ul>
         </div>
     </div>
-</nav>
+</div>
