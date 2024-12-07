@@ -1,0 +1,278 @@
+{% extends 'core/layouts/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Analytics Dashboard" %}{% endblock %}
+
+{% block content %}
+<div class="mx-auto bg-base-100 rounded-2xl p-6">
+    <h1 class="text-3xl font-bold mb-6">{% trans "Analytics Dashboard" %}</h1>
+
+    <!-- Overview Stats -->
+    <div class="grid grid-cols-4 gap-4 mb-4">
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">{% trans "Active Projects" %}</div>
+                <div class="stat-value">{{ stats.total_active_projects }}</div>
+                <div class="stat-desc">{% trans "Currently in progress" %}</div>
+            </div>
+        </div>
+
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">{% trans "Total Revenue" %}</div>
+                <div class="stat-value">{{ stats.total_revenue|floatformat:2 }}</div>
+                <div class="stat-desc">{% trans "From completed projects" %}</div>
+            </div>
+        </div>
+
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">{% trans "New Projects" %}</div>
+                <div class="stat-value">{{ stats.projects_this_month }}</div>
+                <div class="stat-desc">{% trans "Last 30 days" %}</div>
+            </div>
+        </div>
+
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">{% trans "Active Clients" %}</div>
+                <div class="stat-value">{{ stats.active_clients }}</div>
+                <div class="stat-desc">{% trans "With ongoing projects" %}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-2 gap-4 mb-4">
+        <!-- Projects by Status -->
+        <div class="card bg-base-200">
+            <div class="card-body">
+                <h2 class="card-title text-xl font-bold">{% trans "Projects by Status" %}</h2>
+                <canvas id="projectStatusChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Revenue Over Time -->
+        <div class="card bg-base-200">
+            <div class="card-body">
+                <h2 class="card-title text-xl font-bold">{% trans "Revenue Over Time" %}</h2>
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Channel Usage -->
+        <div class="card bg-base-200">
+            <div class="card-body">
+                <h2 class="card-title text-xl font-bold">{% trans "Most Used Channels" %}</h2>
+                <canvas id="channelChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Client Activity -->
+        <div class="card bg-base-200">
+            <div class="card-body">
+                <h2 class="card-title text-xl font-bold">{% trans "Top Clients" %}</h2>
+                <canvas id="clientChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="grid grid-cols-2 gap-4">
+        <!-- Recent Projects -->
+        <div class="card bg-base-200">
+            <div class="card-body">
+                <h2 class="card-title text-xl font-bold">{% trans "Recent Projects" %}</h2>
+                <div class="overflow-x-auto">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>{% trans "Project" %}</th>
+                                <th>{% trans "Client" %}</th>
+                                <th>{% trans "Status" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for project in recent_projects %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'projects:detail' project.id %}" class="link link-hover">
+                                        {{ project.name }}
+                                    </a>
+                                </td>
+                                <td>{{ project.client.name }}</td>
+                                <td>
+                                    <span class="badge {% if project.status == 'COMPLETED' %}badge-success
+                                                     {% elif project.status == 'IN_PROGRESS' %}badge-info
+                                                     {% elif project.status == 'ON_HOLD' %}badge-warning
+                                                     {% elif project.status == 'CANCELLED' %}badge-error
+                                                     {% else %}badge-ghost{% endif %}">
+                                        {{ project.get_status_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Deadlines -->
+        <div class="card bg-base-200">
+            <div class="card-body">
+                <h2 class="card-title text-xl font-bold">{% trans "Upcoming Deadlines" %}</h2>
+                <div class="overflow-x-auto">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>{% trans "Project" %}</th>
+                                <th>{% trans "Client" %}</th>
+                                <th>{% trans "Deadline" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for project in upcoming_deadlines %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'projects:detail' project.id %}" class="link link-hover">
+                                        {{ project.name }}
+                                    </a>
+                                </td>
+                                <td>{{ project.client.name }}</td>
+                                <td>{{ project.deadline|date:"d.m.Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Projects by Status Chart
+        new Chart(document.getElementById('projectStatusChart'), {
+            type: 'pie',
+            data: {
+                labels: {{ project_status_data.labels | safe }},
+        datasets: [{
+            data: {{ project_status_data.data | safe }},
+        backgroundColor: [
+            '#36A2EB',  // IN_PROGRESS
+            '#4CAF50',  // COMPLETED
+            '#FFC107',  // ON_HOLD
+            '#FF5252',  // CANCELLED
+            '#9E9E9E',  // DRAFT
+        ],
+            }]
+        },
+        options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            }
+        }
+    }
+    });
+
+    // Revenue Chart
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: {{ revenue_data.labels | safe }},
+        datasets: [{
+            label: '{% trans "Revenue" %}',
+            data: {{ revenue_data.data | safe }},
+        borderColor: '#4CAF50',
+        tension: 0.1
+            }]
+        },
+        options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+    });
+
+    // Channel Usage Chart
+    new Chart(document.getElementById('channelChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ channel_data.labels | safe }},
+        datasets: [{
+            label: '{% trans "Usage Count" %}',
+            data: {{ channel_data.data | safe }},
+        backgroundColor: '#36A2EB'
+            }]
+        },
+        options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+    });
+
+    // Client Activity Chart
+    new Chart(document.getElementById('clientChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ client_data.labels | safe }},
+        datasets: [{
+            label: '{% trans "Projects" %}',
+            data: {{ client_data.projects | safe }},
+        backgroundColor: '#36A2EB',
+        yAxisID: 'y'
+            }, {
+            label: '{% trans "Total Spent" %}',
+            data: {{ client_data.spent | safe }},
+        backgroundColor: '#4CAF50',
+        type: 'line',
+        yAxisID: 'y1'
+            }]
+        },
+        options: {
+        responsive: true,
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
+        scales: {
+            y: {
+                type: 'linear',
+                display: true,
+                position: 'left',
+            },
+            y1: {
+                type: 'linear',
+                display: true,
+                position: 'right',
+                grid: {
+                    drawOnChartArea: false,
+                },
+            }
+        }
+    }
+    });
+});
+</script>
+{% endblock %}

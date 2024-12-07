@@ -34,5 +34,11 @@ def navigation(request):
             "icon": "fa-solid fa-calendar-days",
             "active": request.path.startswith("/events/"),
         },
+        {
+            "name": _("Analytics"),
+            "url": reverse("core:analytics"),
+            "icon": "fa-solid fa-chart-bar",
+            "active": request.path.startswith("/analytics/"),
+        },
     ]
     return {"nav_items": nav_items}

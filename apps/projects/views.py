@@ -17,11 +17,12 @@ class ProjectListView(LoginRequiredMixin, ListView):
     template_name = "projects/list.html"
     context_object_name = "projects"
     paginate_by = 10
+    ordering = ["-created_at"]
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["projects"] = Project.objects.all().order_by("-created_at")
-        return context
+    def get_template_names(self):
+        if self.request.headers.get("HX-Request"):
+            return ["projects/partials/project_list.html"]
+        return [self.template_name]
 
 
 @login_required

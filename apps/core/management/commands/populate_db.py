@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
 import random
 
 from apps.clients.models import Client
@@ -12,9 +12,16 @@ class Command(BaseCommand):
     help = "Populates the database with sample data"
 
     def handle(self, *args, **options):
+        # First, clear the database
+        self.stdout.write("Clearing existing data...")
+        Project.objects.all().delete()
+        Client.objects.all().delete()
+        Channel.objects.all().delete()
+        ChannelType.objects.all().delete()
+
         self.stdout.write("Creating sample data...")
 
-        # Create channel types
+        # [Previous channel types and channels creation code remains the same]
         channel_types = [
             ChannelType.objects.create(name="LED Screen"),
             ChannelType.objects.create(name="Billboard"),
@@ -51,25 +58,35 @@ class Command(BaseCommand):
             )
             clients.append(client)
 
-        # Create projects
+        # Create projects with extended history
         statuses = ["DRAFT", "IN_PROGRESS", "ON_HOLD", "COMPLETED", "CANCELLED"]
-        status_weights = [0.1, 0.3, 0.2, 0.3, 0.1]  # Probability weights for statuses
+        status_weights = [0.1, 0.3, 0.2, 0.3, 0.1]
 
         today = timezone.now().date()
 
-        for i in range(25):
-            # Randomize dates
-            days_offset = random.randint(-60, 60)  # Projects within ±60 days from today
+        # Create 300 projects spanning the last 12 months
+        for i in range(300):
+            # Randomize dates within the last 12 months
+            days_offset = random.randint(-365, 365)  # Projects from 12 months ago up to 1 month in the future
             start_date = today + timedelta(days=days_offset)
             duration = random.randint(7, 90)  # Projects lasting 7-90 days
+
+            # Adjust status probabilities based on dates
+            if days_offset < -90:  # Older projects are more likely to be completed
+                status = random.choices(statuses, weights=[0.05, 0.05, 0.1, 0.7, 0.1])[0]
+            elif days_offset > 0:  # Future projects are more likely to be drafts
+                status = random.choices(statuses, weights=[0.6, 0.2, 0.1, 0, 0.1])[0]
+            else:
+                status = random.choices(statuses, weights=status_weights)[0]
 
             project = Project.objects.create(
                 name=f"Project {i+1}",
                 client=random.choice(clients),
-                status=random.choices(statuses, weights=status_weights)[0],
+                status=status,
                 deadline=start_date + timedelta(days=duration),
                 cost=random.randint(5000, 50000),
                 description=f"Sample project description {i+1}" if i % 2 == 0 else "",
+                created_at=timezone.make_aware(datetime.combine(start_date, datetime.min.time())),  # Add this line
             )
 
             # Add 1-3 channels to each project
@@ -89,7 +106,9 @@ class Command(BaseCommand):
             # Add 3-7 steps to each project
             num_steps = random.randint(3, 7)
             for j in range(num_steps):
-                is_completed = random.random() < 0.6 if project.status in ["COMPLETED", "IN_PROGRESS"] else False
+                is_completed = (
+                    random.random() < 0.8 if status == "COMPLETED" else (random.random() < 0.6 if status == "IN_PROGRESS" else False)
+                )
                 step_deadline = start_date + timedelta(days=random.randint(1, duration))
 
                 ProjectStep.objects.create(
@@ -106,4 +125,4 @@ class Command(BaseCommand):
         self.stdout.write(f"- {len(channel_types)} channel types")
         self.stdout.write(f"- {len(channels)} channels")
         self.stdout.write(f"- {len(clients)} clients")
-        self.stdout.write(f"- 25 projects with varying statuses")
+        self.stdout.write(f"- 100 projects spanning 12 months")
