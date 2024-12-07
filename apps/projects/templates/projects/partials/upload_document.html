@@ -1,0 +1,40 @@
+{% load i18n %}
+
+<div class="modal-box w-96">
+    <h3 class="font-bold text-lg mb-4">{% trans "Upload Document" %}</h3>
+    <form hx-post="{% url 'projects:upload_document' project.id %}" hx-target="#documents-list"
+        hx-encoding="multipart/form-data" hx-on::after-request="modal.close()" class="space-y-4">
+        {% csrf_token %}
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Name" %}</span>
+            </label>
+            <input type="text" name="name" class="input input-bordered" required>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Type" %}</span>
+            </label>
+            <select name="type" class="select select-bordered" required>
+                {% for value, label in document_types %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "File" %}</span>
+            </label>
+            <input type="file" name="file" class="file-input file-input-bordered" required>
+        </div>
+
+        <div class="modal-action">
+            <button type="submit" class="btn btn-primary">{% trans "Upload" %}</button>
+            <button type="button" class="btn" onclick="modal.close()">
+                {% trans "Cancel" %}
+            </button>
+        </div>
+    </form>
+</div>

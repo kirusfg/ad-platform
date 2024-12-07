@@ -1,0 +1,23 @@
+{% load i18n %}
+
+{% for doc in documents %}
+<div class="flex items-center justify-between rounded-lg mb-4">
+    <div>
+        <p class="font-medium">{{ doc.name }}</p>
+        <p class="text-sm opacity-70">{{ doc.uploaded_at|date:"d.m.Y H:i" }}</p>
+    </div>
+    <div class="flex gap-2">
+        <a href="{{ doc.file.url }}" class="btn btn-sm btn-ghost" target="_blank">
+            <i class="fa-solid fa-download"></i>
+        </a>
+        <button class="btn btn-sm btn-ghost text-error" hx-get="{% url 'projects:delete_document' doc.id %}"
+            hx-target="#modal-content">
+            <i class="fa-solid fa-trash"></i>
+        </button>
+    </div>
+</div>
+{% empty %}
+<p class="text-center opacity-50 py-4">
+    {% trans "No documents uploaded yet" %}
+</p>
+{% endfor %}

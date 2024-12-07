@@ -1,0 +1,15 @@
+{% load i18n %}
+
+<div class="modal-box">
+    <h3 class="font-bold text-lg mb-4">{% trans "Delete Channel" %}</h3>
+    <p>{% trans "Are you sure you want to delete this channel?" %}</p>
+    <p class="text-error font-bold text-center font-size-lg">{{ channel.name }}</p>
+
+    <div class="modal-action">
+        <button class="btn btn-error" hx-post="{% url 'channels:delete' channel.id %}" hx-target="#channels-list"
+            hx-swap="innerHTML" hx-on::after-request="modal.close()">
+            {% trans "Delete" %}
+        </button>
+        <button class="btn" onclick="modal.close()">{% trans "Cancel" %}</button>
+    </div>
+</div>

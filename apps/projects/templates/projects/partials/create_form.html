@@ -1,0 +1,152 @@
+{% load i18n %}
+
+<div class="modal-box w-[1000px] max-w-[1000px]"> <!-- Wider modal for more complex form -->
+    <h3 class="font-bold text-lg mb-4">{% trans "Create New Project" %}</h3>
+    <form hx-post="{% url 'projects:create' %}" hx-target="#projects-list" hx-swap="innerHTML"
+        hx-encoding="multipart/form-data" hx-on::after-request="modal.close()" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- Basic Info -->
+        <div class="grid grid-cols-2 gap-4">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Name" %}</span>
+                </label>
+                <input type="text" name="name" class="input input-bordered" required>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Client" %}</span>
+                </label>
+                <select name="client" class="select select-bordered" required>
+                    <option value="">{% trans "Select client..." %}</option>
+                    {% for client in clients %}
+                    <option value="{{ client.id }}">{{ client.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Status" %}</span>
+                </label>
+                <select name="status" class="select select-bordered" required>
+                    {% for value, label in status_choices %}
+                    <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Deadline" %}</span>
+                </label>
+                <input type="date" name="deadline" class="input input-bordered" required>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Cost" %}</span>
+                </label>
+                <input type="number" name="cost" step="0.01" class="input input-bordered" required>
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Description" %}</span>
+            </label>
+            <textarea name="description" class="textarea textarea-bordered" rows="2"></textarea>
+        </div>
+
+        <!-- Channels -->
+        <div class="space-y-2">
+            <div class="flex justify-between items-center">
+                <label class="label-text font-medium">{% trans "Advertising Channels" %}</label>
+                <button type="button" class="btn btn-sm btn-ghost" onclick="addChannelRow()">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+            <div id="channels-container" class="space-y-2">
+                <!-- Channel rows will be added here -->
+            </div>
+        </div>
+
+        <!-- Initial Steps -->
+        <div class="space-y-2">
+            <div class="flex justify-between items-center">
+                <label class="label-text font-medium">{% trans "Project Steps" %}</label>
+                <button type="button" class="btn btn-sm btn-ghost" onclick="addStepRow()">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+            <div id="steps-container" class="space-y-2">
+                <!-- Step rows will be added here -->
+            </div>
+        </div>
+
+        <div class="modal-action">
+            <button type="submit" class="btn btn-primary">{% trans "Create" %}</button>
+            <button type="button" class="btn" onclick="modal.close()">
+                {% trans "Cancel" %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Templates for dynamic rows -->
+<template id="channel-row-template">
+    <div class="grid grid-cols-4 gap-2 channel-row">
+        <select name="channels[]" class="select select-bordered select-sm" required>
+            <option value="">{% trans "Select channel..." %}</option>
+            {% for channel in channels %}
+            <option value="{{ channel.id }}">{{ channel.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="date" name="channel_start_dates[]" class="input input-bordered input-sm" required>
+        <input type="date" name="channel_end_dates[]" class="input input-bordered input-sm" required>
+        <div class="flex gap-2">
+            <input type="number" name="channel_costs[]" step="0.01" class="input input-bordered input-sm flex-1"
+                required>
+            <button type="button" class="btn btn-sm btn-ghost btn-square"
+                onclick="this.closest('.channel-row').remove()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+    </div>
+</template>
+
+<template id="step-row-template">
+    <div class="grid grid-cols-3 gap-2 step-row">
+        <input type="text" name="step_names[]" placeholder="{% trans 'Step name' %}"
+            class="input input-bordered input-sm" required>
+        <input type="date" name="step_due_dates[]" class="input input-bordered input-sm">
+        <div class="flex gap-2">
+            <input type="number" name="step_orders[]" class="input input-bordered input-sm w-20" required>
+            <button type="button" class="btn btn-sm btn-ghost btn-square" onclick="this.closest('.step-row').remove()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+    </div>
+</template>
+
+<script>
+    function addChannelRow() {
+        const template = document.getElementById('channel-row-template');
+        const container = document.getElementById('channels-container');
+        container.appendChild(template.content.cloneNode(true));
+    }
+
+    function addStepRow() {
+        const template = document.getElementById('step-row-template');
+        const container = document.getElementById('steps-container');
+        container.appendChild(template.content.cloneNode(true));
+    }
+
+    // Add initial rows
+    document.addEventListener('DOMContentLoaded', function () {
+        addChannelRow();
+        addStepRow();
+    });
+</script>

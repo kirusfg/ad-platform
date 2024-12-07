@@ -1,0 +1,65 @@
+{% load i18n %}
+
+<div class="overflow-x-auto">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Client" %}</th>
+                <th>{% trans "Cost" %}</th>
+                <th>{% trans "Created" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Progress" %}</th>
+                <th>{% trans "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr>
+                <td>
+                    <a href="{% url 'projects:detail' project.id %}" class="link link-hover font-medium">
+                        {{ project.name }}
+                    </a>
+                </td>
+                <td>{{ project.client }}</td>
+                <td>{{ project.cost }}</td>
+                <td>{{ project.created_at|date:"d.m.Y" }}</td>
+                <td>
+                    <span class="badge {% if project.status == 'COMPLETED' %}badge-success
+                                     {% elif project.status == 'IN_PROGRESS' %}badge-info
+                                     {% elif project.status == 'ON_HOLD' %}badge-warning
+                                     {% elif project.status == 'CANCELLED' %}badge-error
+                                     {% else %}badge-ghost{% endif %}">
+                        {{ project.get_status_display }}
+                    </span>
+                </td>
+                <td>
+                    <div class="w-40">
+                        <progress class="progress progress-primary w-full" value="{{ project.progress }}"
+                            max="100"></progress>
+                    </div>
+                </td>
+                <td class="flex gap-2">
+                    <a href="{% url 'projects:detail' project.id %}" class="btn btn-sm btn-ghost">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <button class="btn btn-sm btn-ghost" hx-get="{% url 'projects:edit' project.id %}"
+                        hx-target="#modal-content">
+                        <i class="fa-solid fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-ghost text-error" hx-get="{% url 'projects:delete' project.id %}"
+                        hx-target="#modal-content">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center py-4">
+                    {% trans "No projects found" %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

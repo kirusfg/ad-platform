@@ -1,0 +1,141 @@
+{% extends 'core/layouts/base.html' %}
+{% load i18n %}
+
+{% block title %}{{ channel.name }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto bg-base-100 rounded-2xl p-6">
+    <!-- Header with back button -->
+    <div class="flex items-center gap-4 mb-6">
+        <button onclick="history.back()" class="btn btn-ghost">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <h1 class="text-3xl font-bold">{{ channel.name }}</h1>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-4">
+            <!-- Channel Details -->
+            <div class="card bg-base-200">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl font-bold mb-4">{% trans "Channel Details" %}</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold">{% trans "Type" %}</h3>
+                            <p class="font-medium">{{ channel.type.name }}</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">{% trans "Status" %}</h3>
+                            <span class="badge {% if channel.status == 'FREE' %}badge-success
+                                         {% elif channel.status == 'RESERVED' %}badge-warning
+                                         {% elif channel.status == 'IN_USE' %}badge-info
+                                         {% else %}badge-error{% endif %}">
+                                {{ channel.get_status_display }}
+                            </span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">{% trans "Location" %}</h3>
+                            <p class="font-medium">{{ channel.location }}</p>
+                        </div>
+                    </div>
+                    {% if channel.technical_specs %}
+                    <div class="mt-4">
+                        <h3 class="text-lg font-bold">{% trans "Technical Specifications" %}</h3>
+                        <p>{{ channel.technical_specs }}</p>
+                    </div>
+                    {% endif %}
+                    {% if channel.comments %}
+                    <div class="mt-4">
+                        <h3 class="text-lg font-bold">{% trans "Comments" %}</h3>
+                        <p>{{ channel.comments }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Current Usage -->
+            <div class="card bg-base-200">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl font-bold mb-4">{% trans "Current Project" %}</h2>
+                    {% with current_usage=channel.project_channels.all %}
+                    {% for usage in current_usage %}
+                    {% if usage.start_date <= today and usage.end_date >= today %}
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <h3 class="text-lg font-bold">{% trans "Project" %}</h3>
+                                <a href="{% url 'projects:detail' usage.project.id %}"
+                                    class="link link-hover font-medium">
+                                    {{ usage.project.name }}
+                                </a>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold">{% trans "Client" %}</h3>
+                                <p class="font-medium">{{ usage.project.client.name }}</p>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold">{% trans "Period" %}</h3>
+                                <p class="font-medium">
+                                    {{ usage.start_date|date:"d.m.Y" }} - {{ usage.end_date|date:"d.m.Y" }}
+                                </p>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold">{% trans "Cost" %}</h3>
+                                <p class="font-medium">{{ usage.cost|floatformat:2 }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% if not current_usage %}
+                        <p class="text-center opacity-50 py-4">{% trans "Not currently in use" %}</p>
+                        {% endif %}
+                        {% endwith %}
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <!-- Usage History -->
+            <div class="card bg-base-200">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl font-bold mb-4">{% trans "Usage History" %}</h2>
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Project" %}</th>
+                                    <th>{% trans "Period" %}</th>
+                                    <th>{% trans "Cost" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% with history=channel.project_channels.all %}
+                                {% for usage in history %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'projects:detail' usage.project.id %}" class="link font-medium">
+                                            {{ usage.project.name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {{ usage.start_date|date:"d.m.Y" }} - {{ usage.end_date|date:"d.m.Y" }}
+                                    </td>
+                                    <td>{{ usage.cost|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                                {% if not history %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-4">
+                                        {% trans "No usage history" %}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endwith %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

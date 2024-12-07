@@ -1,0 +1,18 @@
+{% load i18n %}
+
+{% for step in steps %}
+<div class="flex items-center gap-4 bg-base-200">
+    <input type="checkbox" class="checkbox" {% if step.is_completed %}checked{% endif %}
+        hx-post="{% url 'projects:toggle_step' step.id %}" hx-target="#steps-list" hx-swap="innerHTML">
+    <div class="flex-1">
+        <p class="font-medium {% if step.is_completed %}line-through opacity-50{% endif %}">
+            {{ step.name }}
+        </p>
+        {% if step.due_date %}
+        <p class="text-sm opacity-70">
+            {% trans "Due" %}: {{ step.due_date|date:"d.m.Y" }}
+        </p>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}

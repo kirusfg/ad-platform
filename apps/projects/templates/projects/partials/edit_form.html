@@ -1,0 +1,196 @@
+{% load i18n %}
+
+<div class="modal-box w-[1000px] max-w-[1000px]">
+    <h3 class="font-bold text-lg mb-4">{% trans "Edit Project" %}</h3>
+    <form hx-post="{% url 'projects:edit' project.id %}" hx-target="#projects-list" hx-swap="innerHTML"
+        hx-encoding="multipart/form-data" hx-on::after-request="modal.close()" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- Basic Info -->
+        <div class="grid grid-cols-2 gap-4">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Name" %}</span>
+                </label>
+                <input type="text" name="name" class="input input-bordered" value="{{ project.name }}" required>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Client" %}</span>
+                </label>
+                <select name="client" class="select select-bordered" required>
+                    {% for client in clients %}
+                    <option value="{{ client.id }}" {% if client.id == project.client_id %}selected{% endif %}>
+                        {{ client.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Status" %}</span>
+                </label>
+                <select name="status" class="select select-bordered" required>
+                    {% for value, label in status_choices %}
+                    <option value="{{ value }}" {% if value == project.status %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Deadline" %}</span>
+                </label>
+                <input type="date" name="deadline" class="input input-bordered"
+                    value="{{ project.deadline|date:'Y-m-d' }}" required>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Cost" %}</span>
+                </label>
+                <input type="number" name="cost" step="0.01" class="input input-bordered"
+                    value="{{ project.cost|stringformat:'.2f' }}" required>
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Description" %}</span>
+            </label>
+            <textarea name="description" class="textarea textarea-bordered"
+                rows="2">{{ project.description }}</textarea>
+        </div>
+
+        <!-- Channels -->
+        <div class="space-y-2">
+            <div class="flex justify-between items-center">
+                <label class="label-text font-medium">{% trans "Advertising Channels" %}</label>
+                <button type="button" class="btn btn-sm btn-ghost" onclick="addChannelRow()">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+            <div id="channels-container" class="space-y-2">
+                {% for project_channel in project.project_channels.all %}
+                <div class="grid grid-cols-4 gap-2 channel-row">
+                    <select name="channels[]" class="select select-bordered select-sm" required>
+                        {% for channel in channels %}
+                        <option value="{{ channel.id }}" {% if channel.id == project_channel.channel_id %}selected{% endif %}>
+                            {{ channel.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <input type="date" name="channel_start_dates[]" class="input input-bordered input-sm"
+                        value="{{ project_channel.start_date|date:'Y-m-d' }}" required>
+                    <input type="date" name="channel_end_dates[]" class="input input-bordered input-sm"
+                        value="{{ project_channel.end_date|date:'Y-m-d' }}" required>
+                    <div class="flex gap-2">
+                        <input type="number" name="channel_costs[]" step="0.01"
+                            class="input input-bordered input-sm flex-1"
+                            value="{{ project_channel.cost|stringformat:'.2f' }}" required>
+                        <button type="button" class="btn btn-sm btn-ghost btn-square"
+                            onclick="this.closest('.channel-row').remove()">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="space-y-2">
+            <div class="flex justify-between items-center">
+                <label class="label-text font-medium">{% trans "Project Steps" %}</label>
+                <button type="button" class="btn btn-sm btn-ghost" onclick="addStepRow()">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+            <div id="steps-container" class="space-y-2">
+                {% for step in project.steps.all %}
+                <div class="grid grid-cols-3 gap-2 step-row">
+                    <input type="text" name="step_names[]" class="input input-bordered input-sm" value="{{ step.name }}"
+                        required>
+                    <input type="date" name="step_due_dates[]" class="input input-bordered input-sm"
+                        value="{{ step.due_date|date:'Y-m-d' }}">
+                    <div class="flex gap-2">
+                        <input type="number" name="step_orders[]" class="input input-bordered input-sm w-20"
+                            value="{{ step.order }}" required>
+                        <button type="button" class="btn btn-sm btn-ghost btn-square"
+                            onclick="this.closest('.step-row').remove()">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="modal-action">
+            <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+            <button type="button" class="btn" onclick="modal.close()">
+                {% trans "Cancel" %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Templates for dynamic rows -->
+<template id="channel-row-template">
+    <div class="grid grid-cols-4 gap-2 channel-row">
+        <select name="channels[]" class="select select-bordered select-sm" required>
+            <option value="">{% trans "Select channel..." %}</option>
+            {% for channel in channels %}
+            <option value="{{ channel.id }}">{{ channel.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="date" name="channel_start_dates[]" class="input input-bordered input-sm" required>
+        <input type="date" name="channel_end_dates[]" class="input input-bordered input-sm" required>
+        <div class="flex gap-2">
+            <input type="number" name="channel_costs[]" step="0.01" class="input input-bordered input-sm flex-1"
+                required>
+            <button type="button" class="btn btn-sm btn-ghost btn-square"
+                onclick="this.closest('.channel-row').remove()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+    </div>
+</template>
+
+<template id="step-row-template">
+    <div class="grid grid-cols-3 gap-2 step-row">
+        <input type="text" name="step_names[]" placeholder="{% trans 'Step name' %}"
+            class="input input-bordered input-sm" required>
+        <input type="date" name="step_due_dates[]" class="input input-bordered input-sm">
+        <div class="flex gap-2">
+            <input type="number" name="step_orders[]" class="input input-bordered input-sm w-20" required>
+            <button type="button" class="btn btn-sm btn-ghost btn-square" onclick="this.closest('.step-row').remove()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+    </div>
+</template>
+
+<script>
+    function addChannelRow() {
+        const template = document.getElementById('channel-row-template');
+        const container = document.getElementById('channels-container');
+        container.appendChild(template.content.cloneNode(true));
+    }
+
+    function addStepRow() {
+        const template = document.getElementById('step-row-template');
+        const container = document.getElementById('steps-container');
+        container.appendChild(template.content.cloneNode(true));
+    }
+
+    // Add initial rows
+    document.addEventListener('DOMContentLoaded', function () {
+        addChannelRow();
+        addStepRow();
+    });
+</script>

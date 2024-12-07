@@ -1,0 +1,122 @@
+{% extends 'core/layouts/base.html' %}
+{% load i18n %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto bg-base-100 rounded-2xl p-6">
+    <!-- Header with back button -->
+    <div class="flex items-center gap-4 mb-6">
+        <button onclick="history.back()" class="btn btn-ghost">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <h1 class="text-3xl font-bold">{{ project.name }}</h1>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-4">
+            <div class="card bg-base-200">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl font-bold mb-4">{% trans "Project Details" %}</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold">{% trans "Client" %}</h3>
+                            <a href="{% url 'clients:detail' project.client.id %}" class="link font-medium">
+                                {{ project.client.name }}
+                            </a>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">{% trans "Status" %}</h3>
+                            <span class="badge {% if project.status == 'COMPLETED' %}badge-success
+                                         {% elif project.status == 'IN_PROGRESS' %}badge-info
+                                         {% elif project.status == 'ON_HOLD' %}badge-warning
+                                         {% elif project.status == 'CANCELLED' %}badge-error
+                                         {% else %}badge-ghost{% endif %}">
+                                {{ project.get_status_display }}
+                            </span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">{% trans "Deadline" %}</h3>
+                            <p class="font-medium">{{ project.deadline|date:"d.m.Y" }}</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">{% trans "Cost" %}</h3>
+                            <p class="font-medium">{{ project.cost|floatformat:2 }}</p>
+                        </div>
+                    </div>
+                    {% if project.description %}
+                    <div class="mt-4">
+                        <h3 class="text-lg font-bold">{% trans "Description" %}</h3>
+                        <p>{{ project.description }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Channels Card -->
+            <div class="card bg-base-200 ">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl font-bold mb-4">{% trans "Advertising Channels" %}</h2>
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Channel" %}</th>
+                                    <th>{% trans "Period" %}</th>
+                                    <th>{% trans "Cost" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pc in channels %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'channels:detail' pc.channel.id %}" class="link font-medium">
+                                            {{ pc.channel.name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {{ pc.start_date|date:"d.m.Y" }} - {{ pc.end_date|date:"d.m.Y" }}
+                                    </td>
+                                    <td>{{ pc.cost|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="card bg-base-200 ">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl font-bold mb-4">{% trans "Project Steps" %}</h2>
+                    <div class="space-y-2" id="steps-list">
+                        {% include 'projects/partials/steps_list.html' %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-base-200">
+                <div class="card-body ">
+                    <h2 class="card-title flex justify-between text-2xl font-bold mb-4">
+                        {% trans "Documents" %}
+                        <button class="btn btn-sm btn-ghost" hx-get="{% url 'projects:upload_document' project.id %}"
+                            hx-target="#modal-content">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </h2>
+                    <div id="documents-list">
+                        {% include 'projects/partials/documents_list.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for document upload -->
+    <dialog id="modal" class="modal">
+        <div id="modal-content" hx-on::after-swap="modal.showModal()"></div>
+    </dialog>
+</div>
+{% endblock %}

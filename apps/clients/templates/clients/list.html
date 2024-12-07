@@ -1,21 +1,21 @@
 {% extends 'core/layouts/base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Advertising Channels" %}{% endblock %}
+{% block title %}{% trans "Clients" %}{% endblock %}
 
 {% block content %}
 <div class="mx-auto bg-base-100 rounded-2xl p-6">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">{% trans "Advertising Channels" %}</h1>
-        <button class="btn btn-primary" hx-get="{% url 'channels:create' %}" hx-target="#modal-content">
+        <h1 class="text-3xl font-bold">{% trans "Clients" %}</h1>
+        <button class="btn btn-primary" hx-get="{% url 'clients:create' %}" hx-target="#modal-content">
             <i class="fa-solid fa-plus mr-2"></i>
             {% trans "Create" %}
         </button>
     </div>
 
-    <!-- Channel list container -->
-    <div id="channels-list">
-        {% include 'channels/partials/list.html' %}
+    <!-- Client list container -->
+    <div id="clients-list">
+        {% include 'clients/partials/list.html' %}
     </div>
 
     <!-- Modal for forms -->

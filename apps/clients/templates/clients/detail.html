@@ -1,0 +1,179 @@
+{% extends 'core/layouts/base.html' %}
+{% load i18n %}
+
+{% block title %}{{ client.name }}{% endblock %}
+
+{% block content %}
+<div class="mx-auto bg-base-100 rounded-2xl p-6">
+    <!-- Header with back button -->
+    <div class="flex items-center gap-4 mb-6">
+        <button onclick="history.back()" class="btn btn-ghost">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <h1 class="text-3xl font-bold">{{ client.name }}</h1>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-4">
+            <!-- Client Details -->
+            <div class="card bg-base-200">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl font-bold mb-4">{% trans "Client Details" %}</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold">{% trans "Contact Person" %}</h3>
+                            <p class="font-medium">{{ client.contact_person }}</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">{% trans "Email" %}</h3>
+                            <p class="font-medium">
+                                {% if client.email %}
+                                <a href="mailto:{{ client.email }}" class="link link-hover">
+                                    {{ client.email }}
+                                </a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">{% trans "Phone" %}</h3>
+                            <p class="font-medium">{{ client.phone|default:"-" }}</p>
+                        </div>
+                        {% if client.address %}
+                        <div class="col-span-2">
+                            <h3 class="text-lg font-bold">{% trans "Address" %}</h3>
+                            <p class="font-medium">{{ client.address }}</p>
+                        </div>
+                        {% endif %}
+                        {% if client.notes %}
+                        <div class="col-span-2">
+                            <h3 class="text-lg font-bold">{% trans "Notes" %}</h3>
+                            <p>{{ client.notes }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Card -->
+            <div class="card bg-base-200">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl font-bold mb-4">{% trans "Statistics" %}</h2>
+                    <div class="stats stats-vertical lg:stats-horizontal shadow">
+                        <div class="stat">
+                            <div class="stat-title">{% trans "Total Projects" %}</div>
+                            <div class="stat-value">{{ stats.total_projects }}</div>
+                            <div class="stat-desc">
+                                {% trans "Active" %}: {{ stats.active_projects }}
+                            </div>
+                        </div>
+
+                        <div class="stat">
+                            <div class="stat-title">{% trans "Total Spent" %}</div>
+                            <div class="stat-value">{{ stats.total_spent|floatformat:2 }}</div>
+                            <div class="stat-desc">
+                                {% trans "Average per project" %}: {{ stats.avg_project_cost|floatformat:2 }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <!-- Active Projects -->
+            <div class="card bg-base-200">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl font-bold mb-4">{% trans "Active Projects" %}</h2>
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Project" %}</th>
+                                    <th>{% trans "Status" %}</th>
+                                    <th>{% trans "Deadline" %}</th>
+                                    <th>{% trans "Progress" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for project in active_projects %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'projects:detail' project.id %}" class="link font-medium">
+                                            {{ project.name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge {% if project.status == 'COMPLETED' %}badge-success
+                                                     {% elif project.status == 'IN_PROGRESS' %}badge-info
+                                                     {% elif project.status == 'ON_HOLD' %}badge-warning
+                                                     {% elif project.status == 'CANCELLED' %}badge-error
+                                                     {% else %}badge-ghost{% endif %}">
+                                            {{ project.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ project.deadline|date:"d.m.Y" }}</td>
+                                    <td class="w-40">
+                                        <progress class="progress progress-primary w-full"
+                                            value="{{ project.progress }}" max="100"></progress>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-4">
+                                        {% trans "No active projects" %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project History -->
+            <div class="card bg-base-200">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl font-bold mb-4">{% trans "Project History" %}</h2>
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Project" %}</th>
+                                    <th>{% trans "Status" %}</th>
+                                    <th>{% trans "Cost" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for project in completed_projects %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'projects:detail' project.id %}" class="link font-medium">
+                                            {{ project.name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="badge {% if project.status == 'COMPLETED' %}badge-success{% else %}badge-error{% endif %}">
+                                            {{ project.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ project.cost|floatformat:2 }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-4">
+                                        {% trans "No completed projects" %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

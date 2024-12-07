@@ -1,0 +1,59 @@
+{% load i18n %}
+
+<div class="modal-box w-96">
+    <h3 class="font-bold text-lg mb-4">{% trans "Create New Client" %}</h3>
+    <form hx-post="{% url 'clients:create' %}" hx-target="#clients-list" hx-swap="innerHTML"
+        hx-on::after-request="modal.close()" class="space-y-4">
+        {% csrf_token %}
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Name" %}</span>
+            </label>
+            <input type="text" name="name" class="input input-bordered" required>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Contact Person" %}</span>
+            </label>
+            <input type="text" name="contact_person" class="input input-bordered" required>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Email" %}</span>
+            </label>
+            <input type="email" name="email" class="input input-bordered">
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Phone" %}</span>
+            </label>
+            <input type="tel" name="phone" class="input input-bordered">
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Address" %}</span>
+            </label>
+            <textarea name="address" class="textarea textarea-bordered" rows="2"></textarea>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Notes" %}</span>
+            </label>
+            <textarea name="notes" class="textarea textarea-bordered" rows="2"></textarea>
+        </div>
+
+        <div class="modal-action">
+            <button type="submit" class="btn btn-primary">
+                {% trans "Create" %}
+            </button>
+            <button type="button" class="btn" onclick="modal.close()">
+                {% trans "Cancel" %}
+            </button>
+        </div>
+    </form>
+</div>
