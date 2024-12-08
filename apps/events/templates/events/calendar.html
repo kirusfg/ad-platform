@@ -19,8 +19,7 @@
         <div class="flex flex-wrap gap-2">
             {% for type in event_types %}
             <label class="label cursor-pointer gap-2">
-                <input type="checkbox" class="checkbox checkbox-sm event-type-filter" value="{{ type.name|lower }}"
-                    checked>
+                <input type="checkbox" class="checkbox checkbox-sm event-type-filter" checked>
                 <span class="label-text">{{ type.name }}</span>
             </label>
             {% endfor %}
@@ -30,8 +29,7 @@
         <div class="flex flex-wrap gap-2">
             {% for status in event_statuses %}
             <label class="label cursor-pointer gap-2">
-                <input type="checkbox" class="checkbox checkbox-sm event-status-filter" value="{{ status.name|lower }}"
-                    checked>
+                <input type="checkbox" class="checkbox checkbox-sm event-status-filter" checked>
                 <span class="label-text">{{ status.name }}</span>
             </label>
             {% endfor %}
@@ -156,18 +154,15 @@
     // Filter functionality
     function updateCalendarFilters() {
         const activeTypes = Array.from(document.querySelectorAll('.event-type-filter:checked'))
-            .map(cb => cb.value);
+            .map(cb => cb.parentElement.querySelector('.label-text').textContent);
         const activeStatuses = Array.from(document.querySelectorAll('.event-status-filter:checked'))
-            .map(cb => cb.value);
+            .map(cb => cb.parentElement.querySelector('.label-text').textContent);
 
         calendar.getEvents().forEach(event => {
-            const typeClass = event.classNames.find(c => c.startsWith('event-type-'));
-            const statusClass = event.classNames.find(c => c.startsWith('event-status-'));
+            const eventType = event.extendedProps.type;
+            const eventStatus = event.extendedProps.status;
 
-            const type = typeClass.replace('event-type-', '');
-            const status = statusClass.replace('event-status-', '');
-
-            const visible = activeTypes.includes(type) && activeStatuses.includes(status);
+            const visible = activeTypes.includes(eventType) && activeStatuses.includes(eventStatus);
             event.setProp('display', visible ? 'auto' : 'none');
         });
     }
