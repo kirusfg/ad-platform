@@ -1,0 +1,102 @@
+{% load i18n %}
+
+<div class="modal-box w-[1000px] max-w-[1000px]" id="modal-content">
+    <h3 class="font-bold text-lg mb-4">{% trans "Create New Event" %}</h3>
+    <form hx-post="{% url 'events:create' %}" hx-swap="none" class="space-y-4">
+        {% csrf_token %}
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Title" %}</span>
+            </label>
+            <input type="text" name="title" class="input input-bordered" required>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Type" %}</span>
+            </label>
+            <select name="type" class="select select-bordered" required>
+                {% for type in event_types %}
+                <option value="{{ type.id }}">{{ type.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Status" %}</span>
+            </label>
+            <select name="status" class="select select-bordered" required>
+                {% for status in event_statuses %}
+                <option value="{{ status.id }}">{{ status.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Start" %}</span>
+                </label>
+                <input type="datetime-local" name="start_datetime" class="input input-bordered" required step="60">
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "End" %}</span>
+                </label>
+                <input type="datetime-local" name="end_datetime" class="input input-bordered" required step="60">
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Description" %}</span>
+            </label>
+            <textarea name="description" class="textarea textarea-bordered" rows="3"></textarea>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Client" %}</span>
+            </label>
+            <select name="client" class="select select-bordered">
+                <option value="">---------</option>
+                {% for client in clients %}
+                <option value="{{ client.id }}">{{ client.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Project" %}</span>
+            </label>
+            <select name="project" class="select select-bordered">
+                <option value="">---------</option>
+                {% for project in projects %}
+                <option value="{{ project.id }}">{{ project.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Channel" %}</span>
+            </label>
+            <select name="channel" class="select select-bordered">
+                <option value="">---------</option>
+                {% for channel in channels %}
+                <option value="{{ channel.id }}">{{ channel.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="modal-action">
+            <button type="submit" class="btn btn-primary">{% trans "Create" %}</button>
+            <button type="button" class="btn" onclick="modal.close()">
+                {% trans "Cancel" %}
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,179 @@
+{% extends 'core/layouts/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Calendar" %}{% endblock %}
+
+{% block content %}
+<div class="mx-auto bg-base-100 rounded-2xl p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">{% trans "Calendar" %}</h1>
+        <button class="btn btn-primary" hx-get="{% url 'events:create' %}" hx-target="#modal-content">
+            <i class="fa-solid fa-plus mr-2"></i>
+            {% trans "Create Event" %}
+        </button>
+    </div>
+
+    <!-- Calendar Filters -->
+    <div class="flex gap-4 mb-6">
+        <!-- Event Types -->
+        <div class="flex flex-wrap gap-2">
+            {% for type in event_types %}
+            <label class="label cursor-pointer gap-2">
+                <input type="checkbox" class="checkbox checkbox-sm event-type-filter" value="{{ type.name|lower }}"
+                    checked>
+                <span class="label-text">{{ type.name }}</span>
+            </label>
+            {% endfor %}
+        </div>
+
+        <!-- Event Statuses -->
+        <div class="flex flex-wrap gap-2">
+            {% for status in event_statuses %}
+            <label class="label cursor-pointer gap-2">
+                <input type="checkbox" class="checkbox checkbox-sm event-status-filter" value="{{ status.name|lower }}"
+                    checked>
+                <span class="label-text">{{ status.name }}</span>
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Calendar container -->
+    <div id="calendar"></div>
+
+    <!-- Modal for forms -->
+    <dialog id="modal" class="modal">
+        <div id="modal-content" hx-on::after-swap="modal.showModal()"></div>
+    </dialog>
+</div>
+
+<style>
+    /* Event type colors */
+    .event-type-client-meeting {
+        background-color: #93c5fd !important;
+        border-color: #60a5fa !important;
+    }
+
+    .event-type-ad-installation {
+        background-color: #86efac !important;
+        border-color: #4ade80 !important;
+    }
+
+    .event-type-team-meeting {
+        background-color: #fcd34d !important;
+        border-color: #fbbf24 !important;
+    }
+
+    .event-type-conference {
+        background-color: #f87171 !important;
+        border-color: #ef4444 !important;
+    }
+
+    .event-type-phone-call {
+        background-color: #d8b4fe !important;
+        border-color: #c084fc !important;
+    }
+
+    /* Status styles */
+    .event-status-completed {
+        opacity: 0.7;
+    }
+
+    .event-status-cancelled {
+        text-decoration: line-through;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: {{ events_json| safe }},
+        eventClick: function (info) {
+            // Get CSRF token from body attribute
+            const csrfToken = document.body.getAttribute('hx-headers');
+            const headers = csrfToken ? JSON.parse(csrfToken) : {};
+
+            fetch(`/events/${info.event.id}/edit/`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    ...headers
+                }
+            })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('modal-content').innerHTML = html;
+                    modal.showModal();
+                });
+        },
+        eventDidMount: function (info) {
+            // Create tooltip with event details
+            const content = `
+                    <div class="p-2">
+                        <div class="font-bold">${info.event.title}</div>
+                        <div class="text-sm">${info.event.extendedProps.type}</div>
+                        <div class="text-sm">${info.event.extendedProps.status}</div>
+                        ${info.event.extendedProps.project ? `<div class="text-sm">Project: ${info.event.extendedProps.project}</div>` : ''}
+                        ${info.event.extendedProps.channel ? `<div class="text-sm">Channel: ${info.event.extendedProps.channel}</div>` : ''}
+                        ${info.event.extendedProps.client ? `<div class="text-sm">Client: ${info.event.extendedProps.client}</div>` : ''}
+                    </div>
+                `;
+
+            tippy(info.el, {
+                content: content,
+                allowHTML: true,
+                theme: 'light'
+            });
+        }
+        });
+    calendar.render();
+
+    function updateCalendar(response) {
+        calendar.removeAllEvents();
+        calendar.addEventSource(response.events);
+    }
+
+    // Add this to handle HTMX after-request
+    document.body.addEventListener('htmx:afterRequest', function (evt) {
+        if (evt.detail.xhr.status === 200) {
+            try {
+                const response = JSON.parse(evt.detail.xhr.response);
+                if (response.events) {
+                    updateCalendar(response);
+                    modal.close();
+                }
+            } catch (e) {
+                // Not a JSON response, ignore
+            }
+        }
+    });
+
+    // Filter functionality
+    function updateCalendarFilters() {
+        const activeTypes = Array.from(document.querySelectorAll('.event-type-filter:checked'))
+            .map(cb => cb.value);
+        const activeStatuses = Array.from(document.querySelectorAll('.event-status-filter:checked'))
+            .map(cb => cb.value);
+
+        calendar.getEvents().forEach(event => {
+            const typeClass = event.classNames.find(c => c.startsWith('event-type-'));
+            const statusClass = event.classNames.find(c => c.startsWith('event-status-'));
+
+            const type = typeClass.replace('event-type-', '');
+            const status = statusClass.replace('event-status-', '');
+
+            const visible = activeTypes.includes(type) && activeStatuses.includes(status);
+            event.setProp('display', visible ? 'auto' : 'none');
+        });
+    }
+
+    document.querySelectorAll('.event-type-filter, .event-status-filter')
+        .forEach(cb => cb.addEventListener('change', updateCalendarFilters));
+});
+</script>
+{% endblock %}

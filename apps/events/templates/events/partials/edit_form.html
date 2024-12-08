@@ -1,0 +1,114 @@
+{% load i18n %}
+
+<div class="modal-box w-[600px] max-w-[600px]">
+    <h3 class="font-bold text-lg mb-4">{% trans "Edit Event" %}</h3>
+    <form hx-post="{% url 'events:edit' event.id %}" hx-swap="none" class="space-y-4">
+        {% csrf_token %}
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Title" %}</span>
+            </label>
+            <input type="text" name="title" class="input input-bordered" required value="{{ event.title }}">
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Type" %}</span>
+            </label>
+            <select name="type" class="select select-bordered" required>
+                {% for type in event_types %}
+                <option value="{{ type.id }}" {% if event.type_id == type.id %}selected{% endif %}>
+                    {{ type.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Status" %}</span>
+            </label>
+            <select name="status" class="select select-bordered" required>
+                {% for status in event_statuses %}
+                <option value="{{ status.id }}" {% if event.status_id == status.id %}selected{% endif %}>
+                    {{ status.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "Start" %}</span>
+                </label>
+                <input type="datetime-local" name="start_datetime" class="input input-bordered" required step="60"
+                    value="{{ event.start_datetime|date:'Y-m-d\TH:i' }}">
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">{% trans "End" %}</span>
+                </label>
+                <input type="datetime-local" name="end_datetime" class="input input-bordered" required step="60"
+                    value="{{ event.end_datetime|date:'Y-m-d\TH:i' }}">
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Description" %}</span>
+            </label>
+            <textarea name="description" class="textarea textarea-bordered" rows="3">{{ event.description }}</textarea>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Client" %}</span>
+            </label>
+            <select name="client" class="select select-bordered">
+                <option value="">---------</option>
+                {% for client in clients %}
+                <option value="{{ client.id }}" {% if event.client_id == client.id %}selected{% endif %}>
+                    {{ client.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Project" %}</span>
+            </label>
+            <select name="project" class="select select-bordered">
+                <option value="">---------</option>
+                {% for project in projects %}
+                <option value="{{ project.id }}" {% if event.project_id == project.id %}selected{% endif %}>
+                    {{ project.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">{% trans "Channel" %}</span>
+            </label>
+            <select name="channel" class="select select-bordered">
+                <option value="">---------</option>
+                {% for channel in channels %}
+                <option value="{{ channel.id }}" {% if event.channel_id == channel.id %}selected{% endif %}>
+                    {{ channel.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="modal-action">
+            <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+            <button type="button" class="btn" onclick="modal.close()">
+                {% trans "Cancel" %}
+            </button>
+        </div>
+    </form>
+</div>

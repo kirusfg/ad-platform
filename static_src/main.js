@@ -6,5 +6,4 @@ import './css/style.css'
 import Chart from 'chart.js/auto'
 
 themeChange(false)
-
 window.Chart = Chart
