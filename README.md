@@ -80,6 +80,73 @@ python manage.py runserver
 
 4. Log in with your superuser credentials.
 
+# Notifications Setup
+
+# Email Configuration
+
+Add these settings to your .env file: 
+
+```env
+// Email settings (using Gmail as an example)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587 EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@gmail.com'
+EMAIL_HOST_PASSWORD = 'your-app-specific-password'
+```
+
+For Gmail: 
+
+1. Enable 2-Factor Authentication 
+2. Generate an App Password: Google Account → Security → App Passwords 
+3. Use the generated password as `EMAIL_HOST_PASSWORD`
+
+# SMS Configuration
+
+This project can use Twilio for SMS. Add these to your .env: 
+
+```env
+TWILIO_ACCOUNT_SID = 'your-account-sid'
+TWILIO_AUTH_TOKEN = 'your-auth-token'
+TWILIO_FROM_NUMBER = 'your-twilio-number'
+```
+
+To set up Twilio: 
+1. Create an account at https://www.twilio.com 
+2. Get your Account SID and Auth Token from the Twilio Console 
+3. Purchase or use an existing Twilio phone number 
+
+# Initial Notification Setup
+
+Set up user preferences in Django Admin: 
+
+- Navigate to /admin/notifications/usernotificationpreference/ 
+- Create preferences for users who should receive notifications
+
+# Background Tasks
+
+For notification processing, add to your crontab: 
+
+```bash 
+// Process reminders every 15 minutes
+*/15 * * * * /path/to/venv/bin/python /path/to/project/manage.py process_reminders
+```
+
+Or using Celery (recommended for production): 
+
+```python
+// settings.py
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+```
+
+```bash
+// Run Celery worker
+celery -A config.celery worker -l info
+// Run Celery beat for scheduled tasks
+celery -A config.celery beat -l info
+```
+
 # Project Structure
 
  ```
@@ -89,6 +156,7 @@ python manage.py runserver
    clients/ # Client management
    core/ # Core functionality
    events/ # Calendar events
+   notifications/ # Notification management
    projects/ # Project management
    users/ # User management
   config/ # Project configuration

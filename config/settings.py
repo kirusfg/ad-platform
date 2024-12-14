@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "apps.channels.apps.ChannelsConfig",
     "apps.clients.apps.ClientsConfig",
     "apps.events.apps.EventsConfig",
+    "apps.notifications.apps.NotificationsConfig",
 ]
 
 MIDDLEWARE = [
