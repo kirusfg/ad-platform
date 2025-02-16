@@ -3,6 +3,9 @@ from django.utils.translation import gettext_lazy as _
 from apps.clients.models import Client
 from apps.channels.models import Channel
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Project(models.Model):
@@ -20,6 +23,7 @@ class Project(models.Model):
     deadline = models.DateField(_("Deadline"))
     cost = models.DecimalField(_("Cost"), max_digits=10, decimal_places=2, help_text=_("Total project cost"))
     description = models.TextField(_("Description"), blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name="created_projects", verbose_name=_("Created By"))
 
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated At"), auto_now=True)

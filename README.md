@@ -100,7 +100,12 @@ python manage.py runserver
 
 # Features
 
-- User authentication and authorization - Client management - Advertising channels management - Project tracking - Event calendar - Analytics -board
+- User authentication and authorization
+- Client management
+- Advertising channels management 
+- Project tracking
+- Event calendar
+- Analytics dashboard
 
 # Development
 
@@ -108,7 +113,8 @@ python manage.py runserver
 
 - Python dependencies:
 ```bash
-pip install package-name pip freeze > requirements.txt
+pip install package-name
+pip freeze > requirements.txt
 ```
 
 - Node.js dependencies: 
@@ -120,7 +126,8 @@ npm install package-name
 
 After making model changes: 
 ```bash
-python manage.py makemigrations python manage.py migrate
+python manage.py makemigrations
+python manage.py migrate
 ```
 
 # Frontend Assets
@@ -140,5 +147,6 @@ The project uses:
 2. Configure your production database 
 3. Collect static files: 
 ```bash
-npm run build python manage.py collectstatic
+npm run build
+python manage.py collectstatic
 ```

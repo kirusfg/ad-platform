@@ -1,12 +1,27 @@
-from django.template.response import TemplateResponse
-from django.views.decorators.http import require_http_methods
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
+from django.contrib import messages
 
 
-def test_page(request):
-    return TemplateResponse(request, "test.html", {"count": 0})
+def user_login(request):
+    # Get "next" from GET or POST, default to "/"
+    next_url = request.GET.get("next") or request.POST.get("next") or "/"
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect(next_url)
+        else:
+            messages.error(request, "Invalid credentials")
+
+    # Pass the next URL to the template
+    return render(request, "login.html", {"next": next_url})
 
 
-@require_http_methods(["POST"])
-def increment(request):
-    count = int(request.POST.get("count", 0)) + 1
-    return TemplateResponse(request, "test.html#counter-partial", {"count": count})
+def user_logout(request):
+    logout(request)
+    return redirect("login")

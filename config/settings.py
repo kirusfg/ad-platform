@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     "apps.channels.apps.ChannelsConfig",
     "apps.clients.apps.ClientsConfig",
     "apps.events.apps.EventsConfig",
+    "apps.notifications.apps.NotificationsConfig",
+    "apps.chat.apps.ChatConfig",
 ]
 
 MIDDLEWARE = [
@@ -59,6 +61,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -75,6 +78,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "apps.core.context_processors.navigation",
+                "apps.notifications.context_processors.notifications_processor",
             ],
         },
     },
@@ -114,10 +118,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Default URLs
+LOGIN_URL = "/login/"
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = "ru"
+LANGUAGE_CODE = "en"
 
 TIME_ZONE = "Asia/Almaty"
 
@@ -126,8 +134,8 @@ USE_L10N = True
 USE_TZ = True
 
 LANGUAGES = (
-    ("ru", _("Russian")),
     ("en", _("English")),
+    ("ru", _("Russian")),
 )
 
 LOCALE_PATHS = [
@@ -137,27 +145,30 @@ LOCALE_PATHS = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "static" / "dist",
+    # BASE_DIR / "static" / "dist",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 # Media files
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # Vite App Dir: static/dist by default
-DJANGO_VITE_ASSETS_PATH = BASE_DIR / "static" / "dist"
+DJANGO_VITE_ASSETS_PATH = BASE_DIR / "static"
 
 # If True, manifest.json will be used
-DJANGO_VITE_MANIFEST_PATH = BASE_DIR / "static" / "dist" / "manifest.json"
+DJANGO_VITE_MANIFEST_PATH = BASE_DIR / "static" / "manifest.json"
 
 # Django Vite Configuration
 DJANGO_VITE = {
     "default": {
-        "dev_mode": True,
+        "dev_mode": DEBUG,
     }
 }
 
@@ -165,3 +176,44 @@ DJANGO_VITE = {
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Email and SMS settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""  # or App Password if 2-Step Verification is enabled
+
+TWILIO_ACCOUNT_SID = ""
+TWILIO_AUTH_TOKEN = ""
+TWILIO_PHONE_NUMBER = ""
+TWILIO_WHATSAPP_NUMBER = ""
+
+
+NO_NOTIFICATIONS = os.getenv("NO_NOTIFICATIONS", "false").lower() in ("true", "1", "t")
+
+
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "file": {
+#             "level": "ERROR",
+#             "class": "logging.FileHandler",
+#             "filename": os.path.join(BASE_DIR, "error.log"),
+#         },
+#         "console": {
+#             "level": "ERROR",
+#             "class": "logging.StreamHandler",
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": ["file", "console"],
+#             "level": "ERROR",
+#             "propagate": True,
+#         },
+#     },
+# }

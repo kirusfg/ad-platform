@@ -12,4 +12,22 @@ dependencies = [
     "markdown>=3.7",
     "python-dotenv>=1.0.1",
     "pytz>=2024.2",
+    "twilio>=9.4.5",
+    "gunicorn>=23.0.0",
+    "whitenoise>=6.9.0",
+    "openai>=1.63.0",
+]
+
+[tool.setuptools]
+packages = ["apps", "config"]  # Adjust this list to include only your actual Python packages
+package-dir = {"" = "."}
+
+# Exclude non-Python directories
+[tool.setuptools.exclude-package-data]
+"*" = [
+    "staticfiles*",
+    "static*",
+    "media*",
+    "node_modules*",
+    "locale*",
 ]

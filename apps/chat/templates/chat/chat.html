@@ -1,0 +1,127 @@
+{% extends 'core/layouts/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "AI Chat" %}{% endblock %}
+
+{% block content %}
+<div class="mx-auto bg-base-100 rounded-2xl p-6 max-w-screen-2xl h-[64rem] max-h-screen">
+    <h1 class="text-3xl font-bold mb-6">{% trans "AI Chat" %}</h1>
+    <div class="mb-4">
+        <label class="label">
+            <span class="label-text">{% trans "Mode" %}</span>
+        </label>
+        <select id="mode" class="select select-bordered">
+            <option value="text">{% trans "Text" %}</option>
+            <option value="image">{% trans "Image" %}</option>
+        </select>
+    </div>
+    <div class="card flex flex-col h-[calc(100%-10rem)]">
+        <div id="chat-log" class="flex-1 overflow-y-auto p-4 space-y-4">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="p-4 bg-base-100">
+            <div class="mb-4">
+                <label class="label">
+                    <span class="label-text">{% trans "Message" %}</span>
+                </label>
+                <textarea id="message" class="textarea textarea-bordered w-full" rows="3"></textarea>
+            </div>
+            <button id="send" class="btn btn-primary w-full relative">
+                <span id="send-text">{% trans "Send" %}</span>
+                <span id="spinner" class="spinner-border spinner-border-sm hidden" role="status"
+                    aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('send').addEventListener('click', function () {
+        const mode = document.getElementById('mode').value;
+        const message = document.getElementById('message').value;
+        const sendButton = document.getElementById('send');
+        const sendText = document.getElementById('send-text');
+        const spinner = document.getElementById('spinner');
+
+        // Disable the button and show the spinner
+        sendButton.disabled = true;
+        sendText.classList.add('hidden');
+        spinner.classList.remove('hidden');
+
+        fetch("{% url 'chat:chat' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: new URLSearchParams({
+                'mode': mode,
+                'message': message
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                const chatLog = document.getElementById('chat-log');
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('chat-bubble', 'chat-bubble-user');
+                messageElement.innerHTML = `<strong>You:</strong> ${data.message}`;
+                chatLog.appendChild(messageElement);
+
+                const responseElement = document.createElement('div');
+                responseElement.classList.add('chat-bubble', 'chat-bubble-ai');
+                if (mode === 'image') {
+                    responseElement.innerHTML = `<strong>AI:</strong> <img src="${data.response}" alt="Generated Image" class="max-w-full h-auto">`;
+                } else {
+                    responseElement.innerHTML = `<strong>AI:</strong> ${data.response}`;
+                }
+                chatLog.appendChild(responseElement);
+
+                // Scroll to the bottom of the chat log
+                chatLog.scrollTop = chatLog.scrollHeight;
+
+                // Re-enable the button and hide the spinner
+                sendButton.disabled = false;
+                sendText.classList.remove('hidden');
+                spinner.classList.add('hidden');
+            });
+    });
+</script>
+
+<style>
+    .chat-bubble {
+        padding: 10px;
+        border-radius: 10px;
+        max-width: 75%;
+        word-wrap: break-word;
+        color: #000;
+        /* Ensure text color is not washed out */
+    }
+
+    .chat-bubble-user {
+        background-color: #d1e7dd;
+        align-self: flex-end;
+        text-align: right;
+    }
+
+    .chat-bubble-ai {
+        background-color: #f8d7da;
+        align-self: flex-start;
+        text-align: left;
+    }
+
+    .spinner-border {
+        border: 0.2em solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        width: 1rem;
+        height: 1rem;
+        animation: spinner-border .75s linear infinite;
+    }
+
+    @keyframes spinner-border {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+{% endblock %}

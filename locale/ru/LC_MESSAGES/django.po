@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-27 16:44+0500\n"
+"POT-Creation-Date: 2025-02-14 20:27+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,20 +25,44 @@ msgid "Channels"
 msgstr "Позиции"
 
 #: apps/channels/models.py:6 apps/channels/models.py:27
-#: apps/channels/templates/channels/list.html:31
-#: apps/channels/templates/channels/list.html:90
+#: apps/channels/templates/channels/partials/create_form.html:10
+#: apps/channels/templates/channels/partials/edit_form.html:10
+#: apps/channels/templates/channels/partials/list.html:7
+#: apps/clients/models.py:6
+#: apps/clients/templates/clients/partials/create_form.html:10
+#: apps/clients/templates/clients/partials/edit_form.html:10
+#: apps/clients/templates/clients/partials/list.html:7 apps/events/models.py:9
+#: apps/events/models.py:24 apps/projects/models.py:16
+#: apps/projects/models.py:70 apps/projects/models.py:97
+#: apps/projects/templates/projects/partials/create_form.html:13
+#: apps/projects/templates/projects/partials/edit_form.html:13
+#: apps/projects/templates/projects/partials/project_list.html:7
+#: apps/projects/templates/projects/partials/upload_document.html:10
 msgid "Name"
 msgstr "Название"
 
-#: apps/channels/models.py:7
+#: apps/channels/models.py:7 apps/events/models.py:10 apps/events/models.py:25
+#: apps/events/models.py:40
+#: apps/events/templates/events/partials/create_form.html:54
+#: apps/events/templates/events/partials/edit_form.html:60
+#: apps/projects/models.py:22 apps/projects/models.py:71
+#: apps/projects/templates/projects/detail.html:49
+#: apps/projects/templates/projects/partials/create_form.html:58
+#: apps/projects/templates/projects/partials/edit_form.html:63
 msgid "Description"
 msgstr "Описание"
 
 #: apps/channels/models.py:8 apps/channels/models.py:38
+#: apps/clients/models.py:13 apps/events/models.py:11 apps/events/models.py:26
+#: apps/events/models.py:53 apps/projects/models.py:24
+#: apps/projects/models.py:76
 msgid "Created At"
 msgstr "Создано"
 
 #: apps/channels/models.py:9 apps/channels/models.py:39
+#: apps/clients/models.py:14 apps/events/models.py:12 apps/events/models.py:27
+#: apps/events/models.py:54 apps/projects/models.py:25
+#: apps/projects/models.py:77
 msgid "Updated At"
 msgstr "Обновлено"
 
@@ -66,75 +90,343 @@ msgstr "В использовании"
 msgid "Blocked"
 msgstr "Заблокирована"
 
-#: apps/channels/models.py:31 apps/channels/templates/channels/list.html:32
-#: apps/channels/templates/channels/list.html:97
+#: apps/channels/models.py:31 apps/channels/templates/channels/detail.html:24
+#: apps/channels/templates/channels/partials/create_form.html:17
+#: apps/channels/templates/channels/partials/edit_form.html:17
+#: apps/channels/templates/channels/partials/list.html:8
+#: apps/events/models.py:41
+#: apps/events/templates/events/partials/create_form.html:16
+#: apps/events/templates/events/partials/edit_form.html:16
+#: apps/projects/models.py:95
+#: apps/projects/templates/projects/partials/upload_document.html:17
 msgid "Type"
 msgstr "Тип"
 
-#: apps/channels/models.py:34 apps/channels/templates/channels/list.html:33
+#: apps/channels/models.py:34 apps/channels/templates/channels/detail.html:28
+#: apps/channels/templates/channels/partials/list.html:9
+#: apps/clients/templates/clients/detail.html:94
+#: apps/clients/templates/clients/detail.html:144
+#: apps/core/templates/core/dashboard.html:92 apps/events/models.py:42
+#: apps/events/templates/events/partials/create_form.html:27
+#: apps/events/templates/events/partials/edit_form.html:29
+#: apps/projects/models.py:18 apps/projects/templates/projects/detail.html:29
+#: apps/projects/templates/projects/partials/create_form.html:32
+#: apps/projects/templates/projects/partials/edit_form.html:33
+#: apps/projects/templates/projects/partials/project_list.html:11
 msgid "Status"
 msgstr "Статус"
 
-#: apps/channels/models.py:35 apps/channels/templates/channels/list.html:34
-#: apps/channels/templates/channels/list.html:108
+#: apps/channels/models.py:35 apps/channels/templates/channels/detail.html:37
+#: apps/channels/templates/channels/partials/create_form.html:28
+#: apps/channels/templates/channels/partials/edit_form.html:28
+#: apps/channels/templates/channels/partials/list.html:10
 msgid "Location"
 msgstr "Местоположение"
 
-#: apps/channels/models.py:36 apps/channels/templates/channels/list.html:115
+#: apps/channels/models.py:36 apps/channels/templates/channels/detail.html:43
+#: apps/channels/templates/channels/partials/create_form.html:35
+#: apps/channels/templates/channels/partials/edit_form.html:35
 msgid "Technical Specifications"
 msgstr "Тех. спецификации"
 
-#: apps/channels/models.py:37 apps/channels/templates/channels/list.html:122
+#: apps/channels/models.py:37 apps/channels/templates/channels/detail.html:49
+#: apps/channels/templates/channels/partials/create_form.html:42
+#: apps/channels/templates/channels/partials/edit_form.html:43
 #, fuzzy
 #| msgid "Clients"
 msgid "Comments"
 msgstr "Контрагенты"
 
-#: apps/channels/models.py:42
+#: apps/channels/models.py:42 apps/events/models.py:48
+#: apps/events/templates/events/partials/create_form.html:85
+#: apps/events/templates/events/partials/edit_form.html:95
+#: apps/projects/templates/projects/detail.html:64
 #, fuzzy
 #| msgid "Channels"
 msgid "Channel"
 msgstr "Позиции"
 
+#: apps/channels/templates/channels/detail.html:21
+#, fuzzy
+#| msgid "Channel Types"
+msgid "Channel Details"
+msgstr "Типы позиций"
+
+#: apps/channels/templates/channels/detail.html:59
+#, fuzzy
+#| msgid "Projects"
+msgid "Current Project"
+msgstr "Проекты"
+
+#: apps/channels/templates/channels/detail.html:65
+#: apps/channels/templates/channels/detail.html:105
+#: apps/clients/templates/clients/detail.html:93
+#: apps/clients/templates/clients/detail.html:143
+#: apps/core/templates/core/dashboard.html:90
+#: apps/core/templates/core/dashboard.html:129 apps/events/models.py:47
+#: apps/events/templates/events/partials/create_form.html:73
+#: apps/events/templates/events/partials/edit_form.html:81
+#: apps/projects/models.py:36
+#, fuzzy
+#| msgid "Projects"
+msgid "Project"
+msgstr "Проекты"
+
+#: apps/channels/templates/channels/detail.html:72 apps/clients/models.py:17
+#: apps/core/templates/core/dashboard.html:91
+#: apps/core/templates/core/dashboard.html:130 apps/events/models.py:50
+#: apps/events/templates/events/partials/create_form.html:61
+#: apps/events/templates/events/partials/edit_form.html:67
+#: apps/projects/models.py:17 apps/projects/templates/projects/detail.html:23
+#: apps/projects/templates/projects/partials/create_form.html:20
+#: apps/projects/templates/projects/partials/edit_form.html:20
+#: apps/projects/templates/projects/partials/project_list.html:8
+#, fuzzy
+#| msgid "Clients"
+msgid "Client"
+msgstr "Контрагенты"
+
+#: apps/channels/templates/channels/detail.html:76
+#: apps/channels/templates/channels/detail.html:106
+#: apps/projects/templates/projects/detail.html:65
+msgid "Period"
+msgstr ""
+
+#: apps/channels/templates/channels/detail.html:82
+#: apps/channels/templates/channels/detail.html:107
+#: apps/clients/templates/clients/detail.html:145 apps/projects/models.py:21
+#: apps/projects/models.py:57 apps/projects/templates/projects/detail.html:43
+#: apps/projects/templates/projects/detail.html:66
+#: apps/projects/templates/projects/partials/create_form.html:50
+#: apps/projects/templates/projects/partials/edit_form.html:54
+#: apps/projects/templates/projects/partials/project_list.html:9
+msgid "Cost"
+msgstr ""
+
+#: apps/channels/templates/channels/detail.html:89
+msgid "Not currently in use"
+msgstr ""
+
+#: apps/channels/templates/channels/detail.html:100
+msgid "Usage History"
+msgstr ""
+
+#: apps/channels/templates/channels/detail.html:128
+msgid "No usage history"
+msgstr ""
+
 #: apps/channels/templates/channels/list.html:4
-#: apps/channels/templates/channels/list.html:18
-#: apps/core/context_processors.py:20
+#: apps/channels/templates/channels/list.html:9
+#: apps/core/context_processors.py:20 apps/projects/models.py:19
+#: apps/projects/templates/projects/detail.html:59
+#: apps/projects/templates/projects/partials/create_form.html:66
+#: apps/projects/templates/projects/partials/edit_form.html:72
 msgid "Advertising Channels"
 msgstr "Позиции"
 
-#: apps/channels/templates/channels/list.html:22
-#: apps/channels/templates/channels/list.html:128
+#: apps/channels/templates/channels/list.html:12
+#: apps/channels/templates/channels/partials/create_form.html:48
+#: apps/clients/templates/clients/list.html:12
+#: apps/clients/templates/clients/partials/create_form.html:52
+#: apps/events/templates/events/partials/create_form.html:96
+#: apps/projects/templates/projects/list.html:12
+#: apps/projects/templates/projects/partials/create_form.html:90
 msgid "Create"
 msgstr "Создать"
 
-#: apps/channels/templates/channels/list.html:35
-msgid "Actions"
-msgstr "Действия"
-
-#: apps/channels/templates/channels/list.html:59
-msgid "No channels found"
-msgstr "Нет позиций"
-
-#: apps/channels/templates/channels/list.html:85
+#: apps/channels/templates/channels/partials/create_form.html:4
 msgid "Create New Channel"
 msgstr "Создать новую позицию"
 
-#: apps/channels/templates/channels/list.html:130
+#: apps/channels/templates/channels/partials/create_form.html:50
+#: apps/channels/templates/channels/partials/delete_confirm.html:13
+#: apps/channels/templates/channels/partials/edit_form.html:51
+#: apps/clients/templates/clients/partials/create_form.html:55
+#: apps/clients/templates/clients/partials/delete_confirm.html:14
+#: apps/clients/templates/clients/partials/edit_form.html:54
+#: apps/events/templates/events/partials/create_form.html:98
+#: apps/events/templates/events/partials/edit_form.html:110
+#: apps/projects/templates/projects/partials/create_form.html:92
+#: apps/projects/templates/projects/partials/delete_confirm.html:14
+#: apps/projects/templates/projects/partials/edit_form.html:136
+#: apps/projects/templates/projects/partials/upload_document.html:36
 msgid "Cancel"
 msgstr "Отмена"
 
-#: apps/channels/views.py:33
-msgid "Channel created successfully"
-msgstr "Позиция успешно создана"
+#: apps/channels/templates/channels/partials/delete_confirm.html:4
+#, fuzzy
+#| msgid "Channels"
+msgid "Delete Channel"
+msgstr "Создать позицию"
 
-#: apps/channels/views.py:35
-#, python-format
-msgid "Error creating channel: %(error)s"
-msgstr "Ошибка создания позиции: %(error)s"
+#: apps/channels/templates/channels/partials/delete_confirm.html:5
+msgid "Are you sure you want to delete this channel?"
+msgstr ""
 
-#: apps/clients/apps.py:8 apps/core/context_processors.py:26
+#: apps/channels/templates/channels/partials/delete_confirm.html:11
+#: apps/clients/templates/clients/partials/delete_confirm.html:12
+#: apps/projects/templates/projects/partials/delete_confirm.html:12
+msgid "Delete"
+msgstr ""
+
+#: apps/channels/templates/channels/partials/edit_form.html:4
+#, fuzzy
+#| msgid "Channels"
+msgid "Edit Channel"
+msgstr "Позиции"
+
+#: apps/channels/templates/channels/partials/edit_form.html:49
+#: apps/clients/templates/clients/partials/edit_form.html:52
+#: apps/events/templates/events/partials/edit_form.html:108
+#: apps/projects/templates/projects/partials/edit_form.html:134
+msgid "Save"
+msgstr ""
+
+#: apps/channels/templates/channels/partials/list.html:11
+#: apps/clients/templates/clients/partials/list.html:11
+#: apps/projects/templates/projects/partials/project_list.html:13
+msgid "Actions"
+msgstr "Действия"
+
+#: apps/channels/templates/channels/partials/list.html:43
+msgid "No channels found"
+msgstr "Нет позиций"
+
+#: apps/clients/apps.py:8 apps/clients/models.py:18
+#: apps/clients/templates/clients/list.html:4
+#: apps/clients/templates/clients/list.html:9
+#: apps/core/context_processors.py:26
 msgid "Clients"
 msgstr "Контрагенты"
+
+#: apps/clients/models.py:7 apps/clients/templates/clients/detail.html:24
+#: apps/clients/templates/clients/partials/create_form.html:17
+#: apps/clients/templates/clients/partials/edit_form.html:17
+#: apps/clients/templates/clients/partials/list.html:8
+msgid "Contact Person"
+msgstr ""
+
+#: apps/clients/models.py:8 apps/clients/templates/clients/detail.html:28
+#: apps/clients/templates/clients/partials/create_form.html:24
+#: apps/clients/templates/clients/partials/edit_form.html:25
+#: apps/clients/templates/clients/partials/list.html:9
+msgid "Email"
+msgstr ""
+
+#: apps/clients/models.py:9 apps/clients/templates/clients/detail.html:40
+#: apps/clients/templates/clients/partials/create_form.html:31
+#: apps/clients/templates/clients/partials/edit_form.html:32
+#: apps/clients/templates/clients/partials/list.html:10
+msgid "Phone"
+msgstr ""
+
+#: apps/clients/models.py:10 apps/clients/templates/clients/detail.html:45
+#: apps/clients/templates/clients/partials/create_form.html:38
+#: apps/clients/templates/clients/partials/edit_form.html:39
+msgid "Address"
+msgstr ""
+
+#: apps/clients/models.py:11 apps/clients/templates/clients/detail.html:51
+#: apps/clients/templates/clients/partials/create_form.html:45
+#: apps/clients/templates/clients/partials/edit_form.html:46
+#: apps/projects/models.py:58
+msgid "Notes"
+msgstr ""
+
+#: apps/clients/templates/clients/detail.html:21
+#, fuzzy
+#| msgid "Clients"
+msgid "Client Details"
+msgstr "Контрагенты"
+
+#: apps/clients/templates/clients/detail.html:62
+#, fuzzy
+#| msgid "Status"
+msgid "Statistics"
+msgstr "Статус"
+
+#: apps/clients/templates/clients/detail.html:65
+#, fuzzy
+#| msgid "Projects"
+msgid "Total Projects"
+msgstr "Проекты"
+
+#: apps/clients/templates/clients/detail.html:68
+#, fuzzy
+#| msgid "Actions"
+msgid "Active"
+msgstr "Действия"
+
+#: apps/clients/templates/clients/detail.html:73
+#: apps/core/templates/core/dashboard.html:246
+msgid "Total Spent"
+msgstr ""
+
+#: apps/clients/templates/clients/detail.html:76
+msgid "Average per project"
+msgstr ""
+
+#: apps/clients/templates/clients/detail.html:88
+#: apps/core/templates/core/dashboard.html:14
+#, fuzzy
+#| msgid "Projects"
+msgid "Active Projects"
+msgstr "Проекты"
+
+#: apps/clients/templates/clients/detail.html:95
+#: apps/core/templates/core/dashboard.html:131 apps/projects/models.py:20
+#: apps/projects/templates/projects/detail.html:39
+#: apps/projects/templates/projects/partials/create_form.html:43
+#: apps/projects/templates/projects/partials/edit_form.html:46
+msgid "Deadline"
+msgstr ""
+
+#: apps/clients/templates/clients/detail.html:96
+#: apps/projects/templates/projects/partials/project_list.html:12
+msgid "Progress"
+msgstr ""
+
+#: apps/clients/templates/clients/detail.html:125
+msgid "No active projects"
+msgstr ""
+
+#: apps/clients/templates/clients/detail.html:138
+#, fuzzy
+#| msgid "Projects"
+msgid "Project History"
+msgstr "Проекты"
+
+#: apps/clients/templates/clients/detail.html:167
+msgid "No completed projects"
+msgstr ""
+
+#: apps/clients/templates/clients/partials/create_form.html:4
+#, fuzzy
+#| msgid "Create New Channel"
+msgid "Create New Client"
+msgstr "Создать новую позицию"
+
+#: apps/clients/templates/clients/partials/delete_confirm.html:4
+#, fuzzy
+#| msgid "Clients"
+msgid "Delete Client"
+msgstr "Контрагенты"
+
+#: apps/clients/templates/clients/partials/delete_confirm.html:5
+msgid "Are you sure you want to delete this client?"
+msgstr ""
+
+#: apps/clients/templates/clients/partials/edit_form.html:4
+#, fuzzy
+#| msgid "Clients"
+msgid "Edit Client"
+msgstr "Контрагенты"
+
+#: apps/clients/templates/clients/partials/list.html:38
+#, fuzzy
+#| msgid "No channels found"
+msgid "No clients found"
+msgstr "Нет позиций"
 
 #: apps/core/apps.py:8
 msgid "Core"
@@ -144,33 +436,376 @@ msgstr "Главная"
 msgid "Home"
 msgstr "Главная"
 
-#: apps/core/context_processors.py:14 apps/projects/apps.py:8
+#: apps/core/context_processors.py:14
+#: apps/core/templates/core/dashboard.html:241 apps/projects/apps.py:8
+#: apps/projects/models.py:37 apps/projects/templates/projects/list.html:4
+#: apps/projects/templates/projects/list.html:9
 msgid "Projects"
 msgstr "Проекты"
 
 #: apps/core/context_processors.py:32 apps/events/apps.py:8
+#: apps/events/models.py:58
 msgid "Events"
 msgstr "Мероприятия"
+
+#: apps/core/context_processors.py:38
+msgid "Analytics"
+msgstr "Аналитика"
+
+#: apps/core/templates/core/dashboard.html:4
+#: apps/core/templates/core/dashboard.html:8
+#, fuzzy
+#| msgid "Analytics"
+msgid "Analytics Dashboard"
+msgstr "Аналитика"
+
+#: apps/core/templates/core/dashboard.html:16
+msgid "Currently in progress"
+msgstr ""
+
+#: apps/core/templates/core/dashboard.html:22
+msgid "Total Revenue"
+msgstr ""
+
+#: apps/core/templates/core/dashboard.html:24
+msgid "From completed projects"
+msgstr ""
+
+#: apps/core/templates/core/dashboard.html:30
+#, fuzzy
+#| msgid "Projects"
+msgid "New Projects"
+msgstr "Проекты"
+
+#: apps/core/templates/core/dashboard.html:32
+msgid "Last 30 days"
+msgstr ""
+
+#: apps/core/templates/core/dashboard.html:38
+#, fuzzy
+#| msgid "Clients"
+msgid "Active Clients"
+msgstr "Контрагенты"
+
+#: apps/core/templates/core/dashboard.html:40
+msgid "With ongoing projects"
+msgstr ""
+
+#: apps/core/templates/core/dashboard.html:50
+#, fuzzy
+#| msgid "Projects"
+msgid "Projects by Status"
+msgstr "Проекты"
+
+#: apps/core/templates/core/dashboard.html:58
+msgid "Revenue Over Time"
+msgstr ""
+
+#: apps/core/templates/core/dashboard.html:66
+#, fuzzy
+#| msgid "Channels"
+msgid "Most Used Channels"
+msgstr "Создать позицию"
+
+#: apps/core/templates/core/dashboard.html:74
+#, fuzzy
+#| msgid "Clients"
+msgid "Top Clients"
+msgstr "Контрагенты"
+
+#: apps/core/templates/core/dashboard.html:85
+#, fuzzy
+#| msgid "Projects"
+msgid "Recent Projects"
+msgstr "Проекты"
+
+#: apps/core/templates/core/dashboard.html:124
+msgid "Upcoming Deadlines"
+msgstr ""
+
+#: apps/core/templates/core/dashboard.html:188
+msgid "Revenue"
+msgstr ""
+
+#: apps/core/templates/core/dashboard.html:215
+msgid "Usage Count"
+msgstr ""
 
 #: apps/core/templates/core/home.html:8
 msgid "Welcome to the homepage of the ad platform!"
 msgstr ""
 
-#: apps/core/templates/core/partials/navbar.html:10
-msgid "Search"
-msgstr "Поиск"
-
-#: apps/core/templates/core/partials/navbar.html:43
-msgid "Profile"
-msgstr "Профиль"
-
-#: apps/core/templates/core/partials/navbar.html:44
-msgid "Settings"
-msgstr "Настройки"
-
-#: apps/core/templates/core/partials/navbar.html:45
+#: apps/core/templates/core/partials/navbar.html:42
 msgid "Logout"
 msgstr "Выйти"
+
+#: apps/events/models.py:15
+#, fuzzy
+#| msgid "Events"
+msgid "Event Type"
+msgstr "Мероприятия"
+
+#: apps/events/models.py:16
+#, fuzzy
+#| msgid "Events"
+msgid "Event Types"
+msgstr "Мероприятия"
+
+#: apps/events/models.py:30
+#, fuzzy
+#| msgid "Status"
+msgid "Event Status"
+msgstr "Статус"
+
+#: apps/events/models.py:31
+#, fuzzy
+#| msgid "Status"
+msgid "Event Statuses"
+msgstr "Статус"
+
+#: apps/events/models.py:39
+#: apps/events/templates/events/partials/create_form.html:9
+#: apps/events/templates/events/partials/edit_form.html:9
+msgid "Title"
+msgstr ""
+
+#: apps/events/models.py:44
+msgid "Start Date/Time"
+msgstr ""
+
+#: apps/events/models.py:45
+msgid "End Date/Time"
+msgstr ""
+
+#: apps/events/models.py:57
+#, fuzzy
+#| msgid "Events"
+msgid "Event"
+msgstr "Мероприятия"
+
+#: apps/events/templates/events/calendar.html:4
+#: apps/events/templates/events/calendar.html:9
+msgid "Calendar"
+msgstr ""
+
+#: apps/events/templates/events/calendar.html:12
+#, fuzzy
+#| msgid "Created At"
+msgid "Create Event"
+msgstr "Создано"
+
+#: apps/events/templates/events/partials/create_form.html:4
+#, fuzzy
+#| msgid "Create New Channel"
+msgid "Create New Event"
+msgstr "Создать новую позицию"
+
+#: apps/events/templates/events/partials/create_form.html:39
+#: apps/events/templates/events/partials/edit_form.html:43
+msgid "Start"
+msgstr ""
+
+#: apps/events/templates/events/partials/create_form.html:46
+#: apps/events/templates/events/partials/edit_form.html:51
+msgid "End"
+msgstr ""
+
+#: apps/events/templates/events/partials/edit_form.html:4
+#, fuzzy
+#| msgid "Events"
+msgid "Edit Event"
+msgstr "Мероприятия"
+
+#: apps/notifications/signals.py:20
+#, python-format
+msgid "New project %(name)s created"
+msgstr "Создан новый проект: %(name)s"
+
+#: apps/notifications/signals.py:35
+#, python-format
+msgid "Channel %(name)s status changed to %(status)s"
+msgstr "Статус позиции %(name)s был изменен на %(status)s"
+
+#: apps/projects/models.py:10
+msgid "Draft"
+msgstr ""
+
+#: apps/projects/models.py:11
+msgid "In Progress"
+msgstr ""
+
+#: apps/projects/models.py:12
+msgid "On Hold"
+msgstr ""
+
+#: apps/projects/models.py:13 apps/projects/models.py:72
+msgid "Completed"
+msgstr ""
+
+#: apps/projects/models.py:14
+#, fuzzy
+#| msgid "Cancel"
+msgid "Cancelled"
+msgstr "Отмена"
+
+#: apps/projects/models.py:21
+msgid "Total project cost"
+msgstr ""
+
+#: apps/projects/models.py:55
+msgid "Start Date"
+msgstr ""
+
+#: apps/projects/models.py:56
+msgid "End Date"
+msgstr ""
+
+#: apps/projects/models.py:57
+msgid "Cost for this channel"
+msgstr ""
+
+#: apps/projects/models.py:62
+#, fuzzy
+#| msgid "Channels"
+msgid "Project Channel"
+msgstr "Создать позицию"
+
+#: apps/projects/models.py:63
+#, fuzzy
+#| msgid "Channels"
+msgid "Project Channels"
+msgstr "Создать позицию"
+
+#: apps/projects/models.py:73
+msgid "Due Date"
+msgstr ""
+
+#: apps/projects/models.py:74
+msgid "Order"
+msgstr ""
+
+#: apps/projects/models.py:80
+#, fuzzy
+#| msgid "Projects"
+msgid "Project Step"
+msgstr "Проекты"
+
+#: apps/projects/models.py:81 apps/projects/templates/projects/detail.html:93
+#: apps/projects/templates/projects/partials/create_form.html:79
+#: apps/projects/templates/projects/partials/edit_form.html:108
+#, fuzzy
+#| msgid "Projects"
+msgid "Project Steps"
+msgstr "Проекты"
+
+#: apps/projects/models.py:90
+msgid "Contract"
+msgstr ""
+
+#: apps/projects/models.py:91
+msgid "Invoice"
+msgstr ""
+
+#: apps/projects/models.py:92
+msgid "Other"
+msgstr ""
+
+#: apps/projects/models.py:96
+#: apps/projects/templates/projects/partials/upload_document.html:28
+msgid "File"
+msgstr ""
+
+#: apps/projects/models.py:98
+#, fuzzy
+#| msgid "Updated At"
+msgid "Uploaded At"
+msgstr "Обновлено"
+
+#: apps/projects/models.py:101
+msgid "Project Document"
+msgstr ""
+
+#: apps/projects/models.py:102
+#, fuzzy
+#| msgid "Projects"
+msgid "Project Documents"
+msgstr "Проекты"
+
+#: apps/projects/templates/projects/detail.html:20
+#, fuzzy
+#| msgid "Projects"
+msgid "Project Details"
+msgstr "Проекты"
+
+#: apps/projects/templates/projects/detail.html:103
+#, fuzzy
+#| msgid "Clients"
+msgid "Documents"
+msgstr "Контрагенты"
+
+#: apps/projects/templates/projects/partials/create_form.html:4
+#, fuzzy
+#| msgid "Create New Channel"
+msgid "Create New Project"
+msgstr "Создать новую позицию"
+
+#: apps/projects/templates/projects/partials/create_form.html:23
+msgid "Select client..."
+msgstr ""
+
+#: apps/projects/templates/projects/partials/create_form.html:102
+#: apps/projects/templates/projects/partials/edit_form.html:146
+msgid "Select channel..."
+msgstr ""
+
+#: apps/projects/templates/projects/partials/create_form.html:122
+#: apps/projects/templates/projects/partials/edit_form.html:166
+msgid "Step name"
+msgstr ""
+
+#: apps/projects/templates/projects/partials/delete_confirm.html:4
+#, fuzzy
+#| msgid "Projects"
+msgid "Delete Project"
+msgstr "Проекты"
+
+#: apps/projects/templates/projects/partials/delete_confirm.html:5
+msgid "Are you sure you want to delete this project?"
+msgstr ""
+
+#: apps/projects/templates/projects/partials/documents_list.html:21
+msgid "No documents uploaded yet"
+msgstr ""
+
+#: apps/projects/templates/projects/partials/edit_form.html:4
+#, fuzzy
+#| msgid "Projects"
+msgid "Edit Project"
+msgstr "Проекты"
+
+#: apps/projects/templates/projects/partials/project_list.html:10
+#, fuzzy
+#| msgid "Create"
+msgid "Created"
+msgstr "Создать"
+
+#: apps/projects/templates/projects/partials/project_list.html:59
+#, fuzzy
+#| msgid "No channels found"
+msgid "No projects found"
+msgstr "Нет позиций"
+
+#: apps/projects/templates/projects/partials/steps_list.html:13
+msgid "Due"
+msgstr ""
+
+#: apps/projects/templates/projects/partials/upload_document.html:4
+msgid "Upload Document"
+msgstr ""
+
+#: apps/projects/templates/projects/partials/upload_document.html:34
+msgid "Upload"
+msgstr ""
 
 #: apps/users/admin.py:14
 msgid "Personal info"
@@ -192,18 +827,44 @@ msgstr "Администратор"
 msgid "Manager"
 msgstr "Менеджер"
 
-#: config/settings.py:129
+#: apps/users/templates/login.html:39
+msgid "Login"
+msgstr ""
+
+#: apps/users/templates/login.html:44
+#, fuzzy
+#| msgid "Users"
+msgid "Username"
+msgstr "Пользователи"
+
+#: apps/users/templates/login.html:50
+msgid "Password"
+msgstr ""
+
+#: apps/users/templates/login.html:55
+msgid "Log in"
+msgstr ""
+
+#: config/settings.py:134
 msgid "Russian"
 msgstr "Русский"
 
-#: config/settings.py:130
+#: config/settings.py:135
 msgid "English"
 msgstr "Английский"
 
-#, fuzzy
-#~| msgid "Channels"
-#~ msgid "Create Channel"
-#~ msgstr "Создать позицию"
+#~ msgid "Channel created successfully"
+#~ msgstr "Позиция успешно создана"
 
-#~ msgid "Analytics"
-#~ msgstr "Аналитика"
+#, python-format
+#~ msgid "Error creating channel: %(error)s"
+#~ msgstr "Ошибка создания позиции: %(error)s"
+
+#~ msgid "Search"
+#~ msgstr "Поиск"
+
+#~ msgid "Profile"
+#~ msgstr "Профиль"
+
+#~ msgid "Settings"
+#~ msgstr "Настройки"

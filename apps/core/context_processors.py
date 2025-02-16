@@ -40,5 +40,11 @@ def navigation(request):
             "icon": "fa-solid fa-chart-bar",
             "active": request.path.startswith("/analytics/"),
         },
+        {
+            "name": _("AI Chat"),
+            "url": reverse("chat:chat"),
+            "icon": "fa-solid fa-comment",
+            "active": request.path.startswith("/chat/"),
+        },
     ]
     return {"nav_items": nav_items}

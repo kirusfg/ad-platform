@@ -49,6 +49,7 @@ def project_create(request):
                 deadline=request.POST["deadline"],
                 cost=request.POST["cost"],
                 description=request.POST["description"],
+                created_by=request.user,
             )
 
             # Create project channels

@@ -7,6 +7,9 @@ from apps.clients.models import Client
 from apps.channels.models import Channel, ChannelType
 from apps.projects.models import Project, ProjectChannel, ProjectStep
 from apps.events.models import Event, EventType, EventStatus
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Command(BaseCommand):
@@ -22,10 +25,23 @@ class Command(BaseCommand):
         Client.objects.all().delete()
         Channel.objects.all().delete()
         ChannelType.objects.all().delete()
+        User.objects.all().delete()
 
         self.stdout.write("Creating sample data...")
 
-        # [Keep all existing channel types, channels, clients, and projects creation code]
+        # Create users
+        users = []
+        for i in range(5):
+            user = User.objects.create_user(
+                username=f"user{i + 1}",
+                email=f"user{i + 1}@example.com",
+                password="password",
+                phone_number=f"+1234567890{i + 1}",
+                role=User.Role.MANAGER,
+            )
+            users.append(user)
+
+        # Create channel types
         channel_types = [
             ChannelType.objects.create(name="LED Screen"),
             ChannelType.objects.create(name="Billboard"),
@@ -39,12 +55,12 @@ class Command(BaseCommand):
         locations = ["Downtown", "Shopping Mall", "Business Center", "Stadium", "Airport"]
         for i in range(15):
             channel = Channel.objects.create(
-                name=f"Channel {i+1}",
+                name=f"Channel {i + 1}",
                 type=random.choice(channel_types),
                 status=random.choice(["FREE", "RESERVED", "IN_USE", "BLOCKED"]),
                 location=random.choice(locations),
-                technical_specs=f'Resolution: {random.choice(["4K", "1080p", "720p"])}' if i % 2 == 0 else "",
-                comments=f"Sample comment for channel {i+1}" if i % 3 == 0 else "",
+                technical_specs=f"Resolution: {random.choice(['4K', '1080p', '720p'])}" if i % 2 == 0 else "",
+                comments=f"Sample comment for channel {i + 1}" if i % 3 == 0 else "",
             )
             channels.append(channel)
 
@@ -53,24 +69,22 @@ class Command(BaseCommand):
         company_types = ["LLC", "Inc.", "Corp", "Company"]
         for i in range(10):
             client = Client.objects.create(
-                name=f"Company {i+1} {random.choice(company_types)}",
-                contact_person=f"Contact Person {i+1}",
-                email=f"contact{i+1}@company{i+1}.com",
-                phone=f"+7 ({random.randint(700,999)}) {random.randint(100,999)}-{random.randint(1000,9999)}",
-                address=f"Street {i+1}, City" if i % 2 == 0 else "",
-                notes=f"Important client notes {i+1}" if i % 3 == 0 else "",
+                name=f"Company {i + 1} {random.choice(company_types)}",
+                contact_person=f"Contact Person {i + 1}",
+                email=f"contact{i + 1}@company{i + 1}.com",
+                phone=f"+7 ({random.randint(700, 999)}) {random.randint(100, 999)}-{random.randint(1000, 9999)}",
+                address=f"Street {i + 1}, City" if i % 2 == 0 else "",
+                notes=f"Important client notes {i + 1}" if i % 3 == 0 else "",
             )
             clients.append(client)
 
-        # [Keep existing projects creation code]
+        # Create projects
         statuses = ["DRAFT", "IN_PROGRESS", "ON_HOLD", "COMPLETED", "CANCELLED"]
         status_weights = [0.1, 0.3, 0.2, 0.3, 0.1]
 
         today = timezone.now().date()
 
-        # Create projects
         for i in range(300):
-            # [Keep existing project creation code]
             days_offset = random.randint(-365, 365)
             start_date = today + timedelta(days=days_offset)
             duration = random.randint(7, 90)
@@ -83,16 +97,16 @@ class Command(BaseCommand):
                 status = random.choices(statuses, weights=status_weights)[0]
 
             project = Project.objects.create(
-                name=f"Project {i+1}",
+                name=f"Project {i + 1}",
                 client=random.choice(clients),
                 status=status,
                 deadline=start_date + timedelta(days=duration),
                 cost=random.randint(5000, 50000),
-                description=f"Sample project description {i+1}" if i % 2 == 0 else "",
+                description=f"Sample project description {i + 1}" if i % 2 == 0 else "",
                 created_at=timezone.make_aware(datetime.combine(start_date, datetime.min.time())),
+                created_by=random.choice(users),
             )
 
-            # [Keep existing project channels and steps creation code]
             for _ in range(random.randint(1, 3)):
                 channel = random.choice(channels)
                 channel_duration = random.randint(7, duration)
@@ -115,8 +129,8 @@ class Command(BaseCommand):
 
                 ProjectStep.objects.create(
                     project=project,
-                    name=f"Step {j+1}",
-                    description=f"Step description {j+1}" if j % 2 == 0 else "",
+                    name=f"Step {j + 1}",
+                    description=f"Step description {j + 1}" if j % 2 == 0 else "",
                     is_completed=is_completed,
                     due_date=step_deadline,
                     order=j + 1,
@@ -142,7 +156,6 @@ class Command(BaseCommand):
         business_hours = [(9, 0), (10, 30), (11, 0), (14, 0), (15, 30), (16, 0)]
         event_durations = [30, 60, 90, 120]  # Duration in minutes
 
-        # Create 200 events
         for i in range(200):
             days_offset = random.randint(-180, 180)  # ±6 months
             event_date = today + timedelta(days=days_offset)
@@ -170,11 +183,11 @@ class Command(BaseCommand):
             elif event_type.name == "Phone Call":
                 title = f"Call with {random.choice(clients).contact_person}"
             else:
-                title = f"{event_type.name} #{i+1}"
+                title = f"{event_type.name} #{i + 1}"
 
             Event.objects.create(
                 title=title,
-                description=f"Event description {i+1}",
+                description=f"Event description {i + 1}",
                 type=event_type,
                 status=status,
                 start_datetime=timezone.make_aware(start_datetime),

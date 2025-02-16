@@ -1,0 +1,65 @@
+{% load i18n %}
+{% load django_vite %}
+
+<!DOCTYPE html>
+
+<html lang="{{ LANGUAGE_CODE }}" data-theme="cupcake">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ad Platform{% endblock %}</title>
+
+    <!-- FullCalendar from CDN -->
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.10/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.10/index.global.min.js'></script>
+
+    <!-- Popper.js and Tippy.js with correct MIME types -->
+    <script src="https://unpkg.com/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6.3.7/dist/tippy.css">
+
+    {% vite_hmr_client %}
+    {% vite_asset 'main.js' %}
+</head>
+
+
+<body class="min-h-screen bg-base-200 p-12 flex items-center justify-center">
+    <!-- Card height calculated to leave padding on top and bottom -->
+    <div class="card flex flex-row max-w-screen-2xl overflow-hidden w-full h-[calc(100vh-6rem)]">
+        <!-- Left half: Logo with red background -->
+        <div class="hidden md:flex w-1/2 items-center justify-center bg-red-500">
+            <!-- Replace with your logo image if needed -->
+            <h1 class="text-5xl font-extrabold text-white">AdSphere</h1>
+        </div>
+        <!-- Right half: Sign In form -->
+        <div class="w-full md:w-1/2 p-8 bg-base-100 flex flex-col justify-center">
+            <h1 class="text-3xl font-bold mb-6">{% trans "Login" %}</h1>
+            <form method="POST" class="space-y-4">
+                {% csrf_token %}
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">{% trans "Username" %}</span>
+                    </label>
+                    <input type="text" name="username" class="input input-bordered" required />
+                </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">{% trans "Password" %}</span>
+                    </label>
+                    <input type="password" name="password" class="input input-bordered" required />
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary w-full">{% trans "Log in" %}</button>
+                    {% for message in messages %}
+                    <p class="text-error mt-2">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

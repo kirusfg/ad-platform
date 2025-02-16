@@ -6,44 +6,89 @@
     </div>
 
     <div class="flex-none gap-2">
-        <label class="input input-bordered flex items-center gap-2">
-            <input type="text" class="grow" placeholder="{% trans 'Search' %}" />
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </label>
         <label class="swap swap-rotate btn btn-ghost btn-circle">
             <input type="checkbox" class="theme-controller" value="coffee" data-toggle-theme="cupcake,forest" />
-            <i class="fa-solid fa-sun fa-lg swap-on"></i>
-            <i class="fa-solid fa-moon fa-lg swap-off"></i>
+            <i class="fa-solid fa-sun fa-lg swap-on ml-1"></i>
+            <i class="fa-solid fa-moon fa-lg swap-off ml-1"></i>
         </label>
 
-        <div class="dropdown dropdown-end">
-            <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+        <details class="dropdown dropdown-end">
+            <summary class="btn btn-ghost btn-circle">
                 <div class="indicator">
-                    <i class="fa-solid fa-bell fa-lg"></i>
-                    <span class="badge badge-sm indicator-item my-4">8</span>
+                    <i class="fa-solid fa-bell fa-lg ml-1"></i>
+                    {% if notifications|length > 0 %}
+                    <span class="badge badge-sm indicator-item my-4" id="notification-counter">
+                        {{ notifications|length }}
+                    </span>
+                    {% endif %}
                 </div>
-            </div>
-            <div tabindex="0" class="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-52 shadow">
-                <!-- some fake notifications -->
-                <ul class="text-sm">
-                    <li class="p-4">Notification 1</li>
-                    <li class="p-4">Notification 2</li>
-                    <li class="p-4">Notification 3</li>
+            </summary>
+            <div tabindex="0" class="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-80 shadow">
+                <ul class="text-sm" id="notifications-list">
+                    {% if notifications %}
+                    {% for notification in notifications %}
+                    <li class="p-4 border-b border-gray-200 flex justify-between items-center"
+                        id="notification-{{ notification.id }}">
+                        <span>{{ notification.message }}</span>
+                    </li>
+                    {% endfor %}
+                    <li class="p-4 text-center">
+                        <form hx-post="{% url 'notifications:mark_all_as_read' %}" hx-target="#notifications-list"
+                            hx-swap="innerHTML">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-ghost">
+                                {% trans "Mark all as read" %}
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="p-4 text-center text-sm">{% trans "No notifications" %}</li>
+                    {% endif %}
                 </ul>
             </div>
-        </div>
+        </details>
         <div class="dropdown dropdown-end">
-            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
                 <div class="w-10 rounded-full">
-                    <img alt="Tailwind CSS Navbar component"
-                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                    <i class="fa-solid fa-user fa-lg ml-1"></i>
                 </div>
             </div>
-            <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                <li><a>{% trans 'Profile' %}</a></li>
-                <li><a>{% trans 'Settings' %}</a></li>
-                <li><a class="text-error hover:bg-error hover:text-error-content">{% trans 'Logout' %}</a></li>
+            <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 shadow">
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <li onclick="this.closest('form').submit(); return false;">
+                        <a href="#" class="text-error w-full">
+                            {% trans 'Logout' %}
+                        </a>
+                    </li>
+                </form>
             </ul>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('htmx:afterSwap', function (evt) {
+        if (evt.detail.target.id === 'notifications-list') {
+            const counter = document.getElementById('notification-counter');
+            if (counter) {
+                counter.remove();
+            }
+        }
+    });
+
+    document.addEventListener('click', function (evt) {
+        if (!evt.target.closest('.dropdown')) {
+            document.querySelectorAll('.dropdown-content').forEach(function (dropdown) {
+                dropdown.classList.remove('show');
+            });
+        }
+    });
+
+    document.querySelectorAll('.dropdown').forEach(function (dropdown) {
+        dropdown.addEventListener('click', function (evt) {
+            evt.stopPropagation();
+            this.querySelector('.dropdown-content').classList.toggle('show');
+        });
+    });
+</script>

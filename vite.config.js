@@ -5,12 +5,13 @@ export default defineConfig({
     root: resolve('./static_src/'),
     base: '/static/',
     build: {
-        outDir: resolve('./static/dist'),
+        outDir: resolve('./static'),
         rollupOptions: {
             input: {
-                mainEntry: resolve('./static/src/main.js'),
+                mainEntry: resolve('./static_src/main.js'),
             },
         },
+        manifest: "manifest.json",
     },
     plugins: [],
     server: {
